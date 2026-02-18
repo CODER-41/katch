@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { FileText, CheckCircle, CalendarDays, HelpCircle, ArrowRight } from "lucide-react";
 import Layout from "@/components/layout/Layout";
 import PageHero from "@/components/common/PageHero";
+import { fadeUp } from "@/lib/animations";
 import heroImage from "@/assets/hero-school.jpg";
 
 const steps = [
@@ -27,11 +28,6 @@ const faqs = [
   { q: "Is Kakamega School a boarding school?", a: "Yes, Kakamega School is a fully residential boarding school. All students live on campus during the school term." },
   { q: "What are the school fees?", a: "As a national school, fees are regulated by the government. Please contact the admissions office for the current fee structure." },
 ];
-
-const fadeUp = {
-  hidden: { opacity: 0, y: 30 },
-  visible: (i: number) => ({ opacity: 1, y: 0, transition: { delay: i * 0.1, duration: 0.5 } }),
-};
 
 const Admissions = () => {
   return (

@@ -5,7 +5,6 @@ import Layout from "@/components/layout/Layout";
 import PageHero from "@/components/common/PageHero";
 import heroImage from "@/assets/hero-school.jpg";
 import gallery1 from "@/assets/gallery-1.jpg";
-import gallery2 from "@/assets/gallery-2.jpg";
 import academicsImg from "@/assets/academics.jpg";
 import studentLifeImg from "@/assets/student-life.jpg";
 import alumniImg from "@/assets/alumni.jpg";
@@ -15,7 +14,6 @@ const categories = ["All", "Academics", "Sports", "Events", "Facilities"];
 
 const photos = [
   { src: gallery1, title: "Chemistry Lab Session", category: "Academics" },
-  { src: gallery2, title: "School Assembly", category: "Events" },
   { src: academicsImg, title: "Library Study Group", category: "Academics" },
   { src: studentLifeImg, title: "Rugby Training", category: "Sports" },
   { src: alumniImg, title: "Graduation Ceremony", category: "Events" },

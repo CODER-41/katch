@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { ArrowRight, GraduationCap, Heart, Users } from "lucide-react";
 import Layout from "@/components/layout/Layout";
 import PageHero from "@/components/common/PageHero";
+import { fadeUp } from "@/lib/animations";
 import alumniImage from "@/assets/alumni.jpg";
 
 const notableAlumni = [
@@ -16,11 +17,6 @@ const waysToGiveBack = [
   { icon: Heart, title: "Infrastructure", desc: "Contribute to school facilities — libraries, labs, dormitories, and sports complexes." },
   { icon: Users, title: "Mentorship", desc: "Share your professional experience and guide current students in career choices." },
 ];
-
-const fadeUp = {
-  hidden: { opacity: 0, y: 30 },
-  visible: (i: number) => ({ opacity: 1, y: 0, transition: { delay: i * 0.1, duration: 0.5 } }),
-};
 
 const Alumni = () => {
   return (

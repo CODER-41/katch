@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { MapPin, Phone, Mail, Facebook, Twitter, Youtube } from "lucide-react";
+import { MapPin, Phone, Mail, Facebook, Twitter, Youtube, ShieldCheck } from "lucide-react";
 
 const Footer = () => {
   return (
@@ -15,7 +15,7 @@ const Footer = () => {
               <h3 className="font-display text-xl font-bold">Kakamega School</h3>
             </div>
             <p className="text-sm opacity-80 leading-relaxed">
-              A premier national school nurturing leaders since 1932. Home of the Green Commandos.
+              A premier national school nurturing leaders since 1932. Home of Katch.
             </p>
           </div>
 
@@ -36,6 +36,11 @@ const Footer = () => {
                   </Link>
                 </li>
               ))}
+              <li>
+                <Link to="/admin/login" className="flex items-center gap-1.5 hover:opacity-100 transition-opacity mt-1 pt-1 border-t border-primary/20">
+                  <ShieldCheck className="w-3.5 h-3.5" /> Staff Portal
+                </Link>
+              </li>
             </ul>
           </div>
 

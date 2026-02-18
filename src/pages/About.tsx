@@ -2,6 +2,7 @@ import { motion } from "framer-motion";
 import { Target, Eye, Heart, Award, Users, BookOpen } from "lucide-react";
 import Layout from "@/components/layout/Layout";
 import PageHero from "@/components/common/PageHero";
+import { fadeUp } from "@/lib/animations";
 import heroImage from "@/assets/hero-school.jpg";
 
 const values = [
@@ -16,11 +17,6 @@ const leadership = [
   { name: "Mrs. Grace Wanjiku", role: "Deputy Principal, Academics", desc: "Overseeing curriculum implementation and academic affairs." },
   { name: "Mr. Peter Otieno", role: "Deputy Principal, Administration", desc: "Managing school operations, discipline, and student welfare." },
 ];
-
-const fadeUp = {
-  hidden: { opacity: 0, y: 30 },
-  visible: (i: number) => ({ opacity: 1, y: 0, transition: { delay: i * 0.1, duration: 0.5 } }),
-};
 
 const About = () => {
   return (

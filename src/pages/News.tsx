@@ -3,6 +3,7 @@ import { Clock, ArrowRight } from "lucide-react";
 import { Link } from "react-router-dom";
 import Layout from "@/components/layout/Layout";
 import PageHero from "@/components/common/PageHero";
+import { fadeUp } from "@/lib/animations";
 import heroImage from "@/assets/hero-school.jpg";
 
 const allNews = [
@@ -19,11 +20,6 @@ const events = [
   { title: "Inter-House Sports", date: "April 5, 2026", desc: "Annual inter-house athletics competition featuring all four school houses." },
   { title: "Speech & Prize Giving Day", date: "November 20, 2026", desc: "Celebrating academic and co-curricular achievements of the year." },
 ];
-
-const fadeUp = {
-  hidden: { opacity: 0, y: 30 },
-  visible: (i: number) => ({ opacity: 1, y: 0, transition: { delay: i * 0.08, duration: 0.5 } }),
-};
 
 const News = () => {
   return (

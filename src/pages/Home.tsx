@@ -13,10 +13,10 @@ import {
 } from "lucide-react";
 import Layout from "@/components/layout/Layout";
 import PageHero from "@/components/common/PageHero";
+import { fadeUp } from "@/lib/animations";
 import heroImage from "@/assets/hero-school.jpg";
 import academicsImage from "@/assets/academics.jpg";
 import studentLifeImage from "@/assets/student-life.jpg";
-import schoolBadge from "@/assets/school-badge.jpeg";
 
 const stats = [
   { icon: Calendar, value: "1932", label: "Established" },
@@ -51,14 +51,6 @@ const quickLinks = [
   { title: "Student Life", desc: "Sports, clubs, and beyond the classroom", icon: Star, to: "/student-life", image: studentLifeImage },
 ];
 
-const fadeUp = {
-  hidden: { opacity: 0, y: 30 },
-  visible: (i: number) => ({
-    opacity: 1, y: 0,
-    transition: { delay: i * 0.1, duration: 0.5 }
-  }),
-};
-
 const Home = () => {
   return (
     <Layout>
@@ -67,21 +59,13 @@ const Home = () => {
         <img src={heroImage} alt="Kakamega School campus" className="absolute inset-0 w-full h-full object-cover" />
         <div className="absolute inset-0 hero-gradient" />
         <div className="relative z-10 text-center px-4 max-w-4xl mx-auto">
-          <motion.img
-            src={schoolBadge}
-            alt="Kakamega High School Badge"
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.5 }}
-            className="w-24 h-24 md:w-32 md:h-32 mx-auto mb-4 drop-shadow-lg"
-          />
           <motion.p
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
             className="text-gold font-semibold tracking-[0.2em] uppercase text-sm mb-4"
           >
-            The Green Commandos
+            Government African School Kakamega
           </motion.p>
           <motion.h1
             initial={{ opacity: 0, y: 20 }}
@@ -89,7 +73,7 @@ const Home = () => {
             transition={{ duration: 0.6, delay: 0.1 }}
             className="font-display text-5xl md:text-7xl font-bold text-primary-foreground mb-6 leading-tight"
           >
-            Kakamega High School
+            Kakamega School
           </motion.h1>
           <motion.p
             initial={{ opacity: 0 }}

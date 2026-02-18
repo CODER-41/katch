@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { Menu, X, Phone, Mail } from "lucide-react";
+import { Menu, X, Phone, Mail, ShieldCheck } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
 const navLinks = [
@@ -34,7 +34,13 @@ const Header = () => {
               info@kakamegaschool.ac.ke
             </span>
           </div>
-          <span className="font-medium tracking-wide">The Green Commandos</span>
+          <Link
+            to="/admin/login"
+            className="flex items-center gap-1.5 font-medium tracking-wide hover:text-primary-foreground/80 transition-colors"
+          >
+            <ShieldCheck className="w-3.5 h-3.5" />
+            Staff Portal
+          </Link>
         </div>
       </div>
 
