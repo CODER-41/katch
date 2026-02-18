@@ -3,12 +3,11 @@ import { Clock, ArrowRight } from "lucide-react";
 import { Link } from "react-router-dom";
 import Layout from "@/components/layout/Layout";
 import PageHero from "@/components/common/PageHero";
-import { fadeUp } from "@/lib/animations";
 import heroImage from "@/assets/hero-school.jpg";
 
 const allNews = [
   { title: "KCSE 2025 Results: Record Performance", excerpt: "Kakamega School records the best KCSE results in its history with a mean grade of A-.", date: "Jan 15, 2026", category: "Academics" },
-  { title: "Green Commandos Win Rugby Championship", excerpt: "Our rugby team clinches the national secondary school championship for the 5th consecutive year.", date: "Dec 8, 2025", category: "Sports" },
+  { title: "Barbarians Win Rugby Championship", excerpt: "Our rugby team, the Barbarians, clinches the national secondary school championship for the 5th consecutive year.", date: "Dec 8, 2025", category: "Sports" },
   { title: "New Science Laboratory Complex Opened", excerpt: "A state-of-the-art science facility with modern equipment has been inaugurated.", date: "Nov 22, 2025", category: "Facilities" },
   { title: "Annual Cultural Week Celebrations", excerpt: "Students showcase diverse Kenyan cultures through music, dance, and traditional cuisine.", date: "Oct 15, 2025", category: "Events" },
   { title: "Kakamega Students Excel at National Science Congress", excerpt: "Three students qualify for the East African Science Congress with innovative projects.", date: "Sep 30, 2025", category: "Academics" },
@@ -20,6 +19,11 @@ const events = [
   { title: "Inter-House Sports", date: "April 5, 2026", desc: "Annual inter-house athletics competition featuring all four school houses." },
   { title: "Speech & Prize Giving Day", date: "November 20, 2026", desc: "Celebrating academic and co-curricular achievements of the year." },
 ];
+
+const fadeUp = {
+  hidden: { opacity: 0, y: 30 },
+  visible: (i: number) => ({ opacity: 1, y: 0, transition: { delay: i * 0.08, duration: 0.5 } }),
+};
 
 const News = () => {
   return (

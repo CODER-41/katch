@@ -13,10 +13,10 @@ import {
 } from "lucide-react";
 import Layout from "@/components/layout/Layout";
 import PageHero from "@/components/common/PageHero";
-import { fadeUp } from "@/lib/animations";
-import heroImage from "@/assets/hero-school.jpg";
+import heroImage from "@/assets/school-gate.jpeg";
 import academicsImage from "@/assets/academics.jpg";
 import studentLifeImage from "@/assets/student-life.jpg";
+import schoolBadge from "@/assets/school-badge.jpeg";
 
 const stats = [
   { icon: Calendar, value: "1932", label: "Established" },
@@ -33,8 +33,8 @@ const newsItems = [
     category: "Academics",
   },
   {
-    title: "Green Commandos Win Rugby Championship",
-    excerpt: "Our rugby team clinches the national secondary school championship for the 5th consecutive year.",
+    title: "Barbarians Win Rugby Championship",
+    excerpt: "Our rugby team, the Barbarians, clinches the national secondary school championship for the 5th consecutive year.",
     date: "Dec 8, 2025",
     category: "Sports",
   },
@@ -51,58 +51,90 @@ const quickLinks = [
   { title: "Student Life", desc: "Sports, clubs, and beyond the classroom", icon: Star, to: "/student-life", image: studentLifeImage },
 ];
 
+const fadeUp = {
+  hidden: { opacity: 0, y: 30 },
+  visible: (i: number) => ({
+    opacity: 1, y: 0,
+    transition: { delay: i * 0.1, duration: 0.5 }
+  }),
+};
+
 const Home = () => {
   return (
     <Layout>
       {/* Hero */}
-      <section className="relative min-h-[90vh] flex items-center justify-center overflow-hidden">
-        <img src={heroImage} alt="Kakamega School campus" className="absolute inset-0 w-full h-full object-cover" />
-        <div className="absolute inset-0 hero-gradient" />
-        <div className="relative z-10 text-center px-4 max-w-4xl mx-auto">
+      <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
+        <img src={heroImage} alt="Kakamega School Gate" className="absolute inset-0 w-full h-full object-cover" />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-black/70" />
+        
+        {/* Decorative side accents */}
+        <div className="absolute top-0 left-0 w-1 h-full bg-gradient-to-b from-transparent via-gold/40 to-transparent hidden md:block" />
+        <div className="absolute top-0 right-0 w-1 h-full bg-gradient-to-b from-transparent via-gold/40 to-transparent hidden md:block" />
+
+        <div className="relative z-10 text-center px-4 max-w-5xl mx-auto">
+          {/* Badge */}
+          <motion.div
+            initial={{ opacity: 0, scale: 0.5, rotate: -10 }}
+            animate={{ opacity: 1, scale: 1, rotate: 0 }}
+            transition={{ duration: 0.7, type: "spring", bounce: 0.4 }}
+            className="mb-6"
+          >
+            <img
+              src={schoolBadge}
+              alt="Kakamega High School Badge"
+              className="w-28 h-28 md:w-36 md:h-36 mx-auto drop-shadow-[0_0_20px_rgba(255,200,0,0.3)] rounded-full border-2 border-gold/30"
+            />
+          </motion.div>
+
+          {/* Slang name */}
           <motion.p
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-            className="text-gold font-semibold tracking-[0.2em] uppercase text-sm mb-4"
+            initial={{ opacity: 0, letterSpacing: "0.5em" }}
+            animate={{ opacity: 1, letterSpacing: "0.3em" }}
+            transition={{ duration: 0.8 }}
+            className="text-gold font-bold tracking-[0.3em] uppercase text-xs md:text-sm mb-2"
           >
-            Government African School Kakamega
+            "KATCH"
           </motion.p>
+
+          {/* School name */}
           <motion.h1
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.1 }}
-            className="font-display text-5xl md:text-7xl font-bold text-primary-foreground mb-6 leading-tight"
+            transition={{ duration: 0.7, delay: 0.2 }}
+            className="font-display text-5xl sm:text-6xl md:text-8xl font-extrabold text-white mb-4 leading-[0.95] drop-shadow-[0_4px_30px_rgba(0,0,0,0.5)]"
           >
-            Kakamega School
+            Kakamega
+            <span className="block text-gold">High School</span>
           </motion.h1>
+
+          {/* Tagline */}
           <motion.p
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ duration: 0.5, delay: 0.3 }}
-            className="text-primary-foreground/80 text-lg md:text-xl max-w-2xl mx-auto mb-8"
+            transition={{ duration: 0.6, delay: 0.5 }}
+            className="text-white/80 text-base md:text-xl max-w-2xl mx-auto mb-6 font-body font-light"
           >
-            A premier national school nurturing academic excellence, character, and leadership since 1932.
+            A premier national school nurturing academic excellence, character, and leadership since <strong className="text-gold font-semibold">1932</strong>.
           </motion.p>
+
+          {/* CTA button */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.4 }}
-            className="flex flex-col sm:flex-row gap-4 justify-center"
+            transition={{ duration: 0.5, delay: 0.7 }}
+            className="flex justify-center"
           >
             <Link
-              to="/admissions"
-              className="inline-flex items-center justify-center gap-2 bg-gold text-gold-foreground font-semibold px-8 py-3.5 rounded-lg hover:opacity-90 transition-opacity text-base"
-            >
-              Apply Now <ArrowRight className="w-4 h-4" />
-            </Link>
-            <Link
               to="/about"
-              className="inline-flex items-center justify-center gap-2 bg-primary-foreground/10 text-primary-foreground border border-primary-foreground/30 font-semibold px-8 py-3.5 rounded-lg hover:bg-primary-foreground/20 transition-colors text-base"
+              className="inline-flex items-center justify-center gap-2 bg-gold text-gold-foreground font-bold px-10 py-4 rounded-full hover:scale-105 transition-transform text-base shadow-lg shadow-gold/20"
             >
-              Learn More
+              Explore Katch <ArrowRight className="w-4 h-4" />
             </Link>
           </motion.div>
         </div>
+
+        {/* Bottom fade */}
+        <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-background to-transparent" />
       </section>
 
       {/* Stats */}
@@ -216,7 +248,7 @@ const Home = () => {
       <section className="section-padding bg-primary text-primary-foreground text-center">
         <div className="container mx-auto max-w-2xl">
           <h2 className="font-display text-3xl md:text-4xl font-bold mb-4">
-            Ready to Join the Green Commandos?
+            Ready to Join Katch?
           </h2>
           <p className="opacity-80 mb-8 text-lg">
             Admissions are now open for the next academic year. Begin your journey at Kakamega School today.

@@ -2,9 +2,9 @@ import { motion } from "framer-motion";
 import { Trophy, Music, Microscope, Globe2, Volleyball, Drama } from "lucide-react";
 import Layout from "@/components/layout/Layout";
 import PageHero from "@/components/common/PageHero";
-import { fadeUp } from "@/lib/animations";
 import studentLifeImage from "@/assets/student-life.jpg";
 import gallery1 from "@/assets/gallery-1.jpg";
+import gallery2 from "@/assets/gallery-2.jpg";
 
 const activities = [
   { icon: Volleyball, title: "Sports", items: ["Rugby", "Football", "Athletics", "Swimming", "Basketball", "Volleyball"] },
@@ -19,6 +19,11 @@ const testimonials = [
   { name: "Kevin Mwangi", year: "Form 4", quote: "The brotherhood at Kakamega is unlike any other. The Green Commando spirit stays with you forever." },
   { name: "Brian Odhiambo", year: "Form 3", quote: "The teachers here don't just teach — they mentor and inspire us to reach our full potential." },
 ];
+
+const fadeUp = {
+  hidden: { opacity: 0, y: 30 },
+  visible: (i: number) => ({ opacity: 1, y: 0, transition: { delay: i * 0.1, duration: 0.5 } }),
+};
 
 const StudentLife = () => {
   return (
@@ -60,12 +65,19 @@ const StudentLife = () => {
           <h2 className="font-display text-3xl md:text-4xl font-bold text-foreground mb-10 text-center">
             Life on Campus
           </h2>
-          <div className="flex justify-center">
-            <motion.div initial={{ opacity: 0, scale: 0.95 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }} className="rounded-xl overflow-hidden shadow-md max-w-md">
+          <div className="grid md:grid-cols-2 gap-6">
+            <motion.div initial={{ opacity: 0, scale: 0.95 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }} className="rounded-xl overflow-hidden shadow-md">
               <img src={gallery1} alt="Science laboratory" className="w-full h-64 object-cover" loading="lazy" />
               <div className="p-4 bg-card">
                 <p className="font-semibold text-foreground">Science Laboratory</p>
                 <p className="text-sm text-muted-foreground">Hands-on experiments in our modern labs</p>
+              </div>
+            </motion.div>
+            <motion.div initial={{ opacity: 0, scale: 0.95 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }} transition={{ delay: 0.1 }} className="rounded-xl overflow-hidden shadow-md">
+              <img src={gallery2} alt="School assembly" className="w-full h-64 object-cover" loading="lazy" />
+              <div className="p-4 bg-card">
+                <p className="font-semibold text-foreground">Morning Assembly</p>
+                <p className="text-sm text-muted-foreground">Building unity and school spirit</p>
               </div>
             </motion.div>
           </div>

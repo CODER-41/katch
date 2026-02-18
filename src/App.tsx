@@ -13,6 +13,10 @@ import Gallery from "./pages/Gallery";
 import Alumni from "./pages/Alumni";
 import Contact from "./pages/Contact";
 import NotFound from "./pages/NotFound";
+import AdminLogin from "./pages/admin/AdminLogin";
+import AdminSetup from "./pages/admin/AdminSetup";
+import AdminDashboard from "./pages/admin/AdminDashboard";
+import ProtectedAdminRoute from "./components/admin/ProtectedAdminRoute";
 
 const queryClient = new QueryClient();
 
@@ -32,6 +36,13 @@ const App = () => (
           <Route path="/gallery" element={<Gallery />} />
           <Route path="/alumni" element={<Alumni />} />
           <Route path="/contact" element={<Contact />} />
+          <Route path="/admin/login" element={<AdminLogin />} />
+          <Route path="/admin/setup" element={<AdminSetup />} />
+          <Route path="/admin/dashboard" element={
+            <ProtectedAdminRoute>
+              <AdminDashboard />
+            </ProtectedAdminRoute>
+          } />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>

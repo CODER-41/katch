@@ -1,9 +1,7 @@
 import { motion } from "framer-motion";
 import { Target, Eye, Heart, Award, Users, BookOpen } from "lucide-react";
 import Layout from "@/components/layout/Layout";
-import PageHero from "@/components/common/PageHero";
-import { fadeUp } from "@/lib/animations";
-import heroImage from "@/assets/hero-school.jpg";
+import heroImage from "@/assets/admin-block.jpeg";
 
 const values = [
   { icon: BookOpen, title: "Academic Excellence", desc: "We pursue the highest standards of learning and intellectual development." },
@@ -18,32 +16,47 @@ const leadership = [
   { name: "Mr. Peter Otieno", role: "Deputy Principal, Administration", desc: "Managing school operations, discipline, and student welfare." },
 ];
 
+const fadeUp = {
+  hidden: { opacity: 0, y: 30 },
+  visible: (i: number) => ({ opacity: 1, y: 0, transition: { delay: i * 0.1, duration: 0.5 } }),
+};
+
 const About = () => {
   return (
     <Layout>
-      <PageHero
-        title="About Us"
-        subtitle="Nurturing excellence since 1932 — The home of the Green Commandos."
-        backgroundImage={heroImage}
-      />
+      {/* Full-width hero with split content */}
+      <section className="relative min-h-[600px] md:min-h-[700px] flex items-end overflow-hidden">
+        <img src={heroImage} alt="Kakamega School Administration Block" className="absolute inset-0 w-full h-full object-cover object-center" loading="eager" />
+        <div className="absolute inset-0 bg-gradient-to-r from-black/75 via-black/20 to-transparent" />
 
-      {/* History */}
-      <section className="section-padding bg-background">
-        <div className="container mx-auto max-w-4xl">
-          <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
-            <h2 className="font-display text-3xl md:text-4xl font-bold text-foreground mb-6">Our History</h2>
-            <div className="prose prose-lg text-muted-foreground space-y-4">
-              <p>
-                Kakamega High School was established in 1932 as one of Kenya's oldest and most prestigious national secondary schools. Located in the heart of Kakamega County in Western Kenya, the school has grown from humble beginnings into a leading academic institution recognized across East Africa.
+        <div className="relative z-10 w-full container mx-auto px-4 pb-16 pt-32">
+          <div className="grid md:grid-cols-2 gap-10 items-end max-w-5xl">
+            {/* About Us heading — left side, on the dark gradient */}
+            <motion.div initial={{ opacity: 0, x: -30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ duration: 0.6 }}>
+              <p className="text-gold font-bold tracking-[0.2em] uppercase text-xs mb-3">Est. 1932</p>
+              <h1 className="font-display text-4xl md:text-5xl lg:text-6xl font-extrabold text-white mb-4 leading-tight">
+                About <span className="text-gold">Katch</span>
+              </h1>
+              <p className="text-white/80 text-base md:text-lg font-body leading-relaxed max-w-md">
+                Nurturing excellence since 1932 — The home of Katch, a premier national school in the heart of Western Kenya.
               </p>
-              <p>
-                Affectionately known as the "Green Commandos," the school has produced thousands of graduates who have gone on to become leaders in government, business, academia, and the arts. The green color represents growth, vitality, and the school's deep connection to the lush environment of western Kenya.
-              </p>
-              <p>
-                Over nine decades, Kakamega School has maintained its commitment to academic excellence, character development, and co-curricular achievement, consistently ranking among Kenya's top national schools.
-              </p>
-            </div>
-          </motion.div>
+            </motion.div>
+
+            {/* Our History — right side, glass card */}
+            <motion.div initial={{ opacity: 0, x: 30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ duration: 0.6, delay: 0.2 }}
+              className="bg-black/40 backdrop-blur-md border border-white/15 rounded-xl p-6 md:p-8"
+            >
+              <h2 className="font-display text-2xl md:text-3xl font-bold text-white mb-4">Our History</h2>
+              <div className="text-white/80 space-y-3 text-sm md:text-base leading-relaxed">
+                <p>
+                  Kakamega High School was established in 1932 as one of Kenya's oldest and most prestigious national secondary schools, growing from humble beginnings into a leading institution recognised across East Africa.
+                </p>
+                <p>
+                  Affectionately known as "Katch," the school has produced thousands of graduates who have become leaders in government, business, academia, and the arts.
+                </p>
+              </div>
+            </motion.div>
+          </div>
         </div>
       </section>
 
