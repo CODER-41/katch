@@ -3,7 +3,6 @@ import { motion } from "framer-motion";
 import { MapPin, Phone, Mail, Clock, Send, CheckCircle } from "lucide-react";
 import Layout from "@/components/layout/Layout";
 import PageHero from "@/components/common/PageHero";
-import heroImage from "@/assets/hero-school.jpg";
 import { z } from "zod";
 import { toast } from "sonner";
 
@@ -48,7 +47,7 @@ const Contact = () => {
       <PageHero
         title="Contact Us"
         subtitle="We'd love to hear from you. Reach out to Kakamega School."
-        backgroundImage={heroImage}
+        backgroundImage="https://res.cloudinary.com/da0mkvthw/image/upload/v1771530037/Tuition_Block_qc0z0n.jpg"
       />
 
       <section className="section-padding bg-background">
@@ -59,9 +58,9 @@ const Contact = () => {
               <h2 className="font-display text-2xl font-bold text-foreground">Get in Touch</h2>
               <div className="space-y-5">
                 {[
-                  { icon: MapPin, label: "Address", value: "P.O. Box 340, Kakamega, Kenya" },
-                  { icon: Phone, label: "Phone", value: "+254 700 000 000" },
-                  { icon: Mail, label: "Email", value: "info@kakamegaschool.ac.ke" },
+                  { icon: MapPin, label: "Address", value: "P.O. Box 90-50100, Kakamega" },
+                  { icon: Phone, label: "Phone", value: "0759340116" },
+                  { icon: Mail, label: "Email", value: "kakamegasch@gmail.com" },
                   { icon: Clock, label: "Office Hours", value: "Mon - Fri: 8:00 AM - 5:00 PM" },
                 ].map((item) => (
                   <div key={item.label} className="flex items-start gap-3">

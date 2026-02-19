@@ -6,17 +6,18 @@ import gallery1 from "@/assets/gallery-1.jpg";
 import gallery2 from "@/assets/gallery-2.jpg";
 
 const activities = [
-  { icon: Volleyball, title: "Sports", items: ["Rugby", "Football", "Athletics", "Swimming", "Basketball", "Volleyball"] },
-  { icon: Music, title: "Performing Arts", items: ["Choir", "Drama Club", "Dance Troupe", "School Band"] },
+  { icon: Volleyball, title: "Sports", items: ["Rugby", "Football", "Athletics", "Basketball", "Volleyball", "Hockey"] },
+  { icon: Music, title: "Performing Arts", items: ["Choir", "Drama Club", "School Band", "Poetry Recitation"] },
   { icon: Microscope, title: "Academic Clubs", items: ["Science Club", "Debate Society", "Mathematics Club", "ICT Club"] },
   { icon: Globe2, title: "Service & Leadership", items: ["Scouts", "Red Cross", "Environmental Club", "Peer Counseling"] },
   { icon: Drama, title: "Cultural Activities", items: ["Cultural Week", "Language Clubs", "Creative Writing", "Poetry Recitation"] },
-  { icon: Trophy, title: "Competitions", items: ["National Science Congress", "KCSE Mock Exams", "Inter-School Sports", "Music Festivals"] },
+  { icon: Trophy, title: "Competitions", items: ["National Science Congress", "KCSE Mock Exams", "Inter-Classes Sports", "Music Festivals"] },
 ];
 
 const testimonials = [
-  { name: "Kevin Mwangi", year: "Form 4", quote: "The brotherhood at Kakamega is unlike any other. The Green Commando spirit stays with you forever." },
-  { name: "Brian Odhiambo", year: "Form 3", quote: "The teachers here don't just teach — they mentor and inspire us to reach our full potential." },
+  { name: "Kevin Mwangi", year: "Form 4R", quote: "The brotherhood at Kakamega is unlike any other. The Green Commando spirit stays with you forever." },
+  { name: "Brian Odhiambo", year: "Form 3Y", quote: "The teachers here don't just teach — they mentor and inspire us to reach our full potential." },
+  { name: "David Wanjala", year: "Form 2G", quote: "Joining Katch has been the best decision. The academic and sports programs have helped me grow tremendously." },
 ];
 
 const fadeUp = {
@@ -76,7 +77,7 @@ const StudentLife = () => {
       <section className="section-padding bg-section-alt">
         <div className="container mx-auto max-w-4xl">
           <h2 className="font-display text-3xl md:text-4xl font-bold text-foreground mb-10 text-center">
-            Life on Campus
+            Life on School
           </h2>
           <div className="grid md:grid-cols-2 gap-6">
             <motion.div initial={{ opacity: 0, scale: 0.95 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }} className="rounded-xl overflow-hidden shadow-md">
