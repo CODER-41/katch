@@ -27,11 +27,12 @@ const Alumni = () => {
   return (
     <Layout>
       {/* Custom Hero for Alumni */}
-      <section className="relative min-h-[340px] md:min-h-[420px] flex items-end justify-center overflow-hidden bg-white">
+      <section className="relative min-h-[340px] md:min-h-[420px] flex items-end justify-center overflow-hidden">
         <img
           src="https://res.cloudinary.com/da0mkvthw/image/upload/v1771530979/katch_teke0a.jpg"
           alt=""
-          className="absolute inset-0 w-full h-full object-contain object-center"
+          className="absolute inset-0 w-full h-full object-cover"
+          style={{ objectPosition: '50% 20%' }}
           loading="eager"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-white/95 via-white/60 to-transparent" />
