@@ -51,7 +51,7 @@ const Academics = () => {
 
       {/* Subjects */}
       <section className="section-padding bg-section-alt">
-        <div className="container mx-auto max-w-4xl">
+        <div className="container mx-auto max-w-7xl px-4">
           <h2 className="font-display text-3xl md:text-4xl font-bold text-foreground mb-10 text-center">Subjects Offered</h2>
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {subjects.map((s, i) => (
