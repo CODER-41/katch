@@ -46,16 +46,21 @@ const photos = [
   {
     src: "https://res.cloudinary.com/da0mkvthw/image/upload/v1771527207/coach_wamanga_wgjpnz.jpg",
     title: "Coach Wamanga",
-    category: "Events",
+    category: "Sports",
   },
   {
     src: "https://res.cloudinary.com/da0mkvthw/image/upload/v1771527200/chrisan_ojwang_geu1fq.jpg",
     title: "Chrisan Ojwang",
-    category: "Events",
+    category: "Sports",
   },
   {
     src: "https://res.cloudinary.com/da0mkvthw/image/upload/v1771509854/Barbarians_rugby_l8h0en.jpg",
     title: "Barbarians Rugby",
+    category: "Sports",
+  },
+  {
+    src: "https://res.cloudinary.com/da0mkvthw/image/upload/v1771529191/The_Green_Commandos_reign_wfmlsr.jpg",
+    title: "The Green Commandos Reign",
     category: "Sports",
   },
 ];
