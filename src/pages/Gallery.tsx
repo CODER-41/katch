@@ -4,22 +4,60 @@ import { X } from "lucide-react";
 import Layout from "@/components/layout/Layout";
 import PageHero from "@/components/common/PageHero";
 import heroImage from "@/assets/hero-school.jpg";
-import gallery1 from "@/assets/gallery-1.jpg";
-import gallery2 from "@/assets/gallery-2.jpg";
-import academicsImg from "@/assets/academics.jpg";
-import studentLifeImg from "@/assets/student-life.jpg";
-import alumniImg from "@/assets/alumni.jpg";
-import heroSchool from "@/assets/hero-school.jpg";
 
 const categories = ["All", "Academics", "Sports", "Events", "Facilities"];
 
 const photos = [
-  { src: gallery1, title: "Chemistry Lab Session", category: "Academics" },
-  { src: gallery2, title: "School Assembly", category: "Events" },
-  { src: academicsImg, title: "Library Study Group", category: "Academics" },
-  { src: studentLifeImg, title: "Rugby Training", category: "Sports" },
-  { src: alumniImg, title: "Graduation Ceremony", category: "Events" },
-  { src: heroSchool, title: "School Aerial View", category: "Facilities" },
+  {
+    src: "https://res.cloudinary.com/da0mkvthw/image/upload/v1771527328/Vikings_eu7zfb.jpg",
+    title: "Vikings",
+    category: "Sports",
+  },
+  {
+    src: "https://res.cloudinary.com/da0mkvthw/image/upload/v1771527320/The_green_commandos_qr4pw7.jpg",
+    title: "The Green Commandos",
+    category: "Sports",
+  },
+  {
+    src: "https://res.cloudinary.com/da0mkvthw/image/upload/v1771527310/Katch_striker_sklkf3.jpg",
+    title: "Katch Striker",
+    category: "Sports",
+  },
+  {
+    src: "https://res.cloudinary.com/da0mkvthw/image/upload/v1771527302/kakamega_school_rugby_anrtrm.jpg",
+    title: "Kakamega School Rugby",
+    category: "Sports",
+  },
+  {
+    src: "https://res.cloudinary.com/da0mkvthw/image/upload/v1771527275/kakamega_school_basketball_yeupkb.jpg",
+    title: "Kakamega School Basketball",
+    category: "Sports",
+  },
+  {
+    src: "https://res.cloudinary.com/da0mkvthw/image/upload/v1771527268/Green_Commandos_vtihot.jpg",
+    title: "Green Commandos",
+    category: "Sports",
+  },
+  {
+    src: "https://res.cloudinary.com/da0mkvthw/image/upload/v1771527242/GC_h8ie0g.jpg",
+    title: "GC",
+    category: "Sports",
+  },
+  {
+    src: "https://res.cloudinary.com/da0mkvthw/image/upload/v1771527207/coach_wamanga_wgjpnz.jpg",
+    title: "Coach Wamanga",
+    category: "Events",
+  },
+  {
+    src: "https://res.cloudinary.com/da0mkvthw/image/upload/v1771527200/chrisan_ojwang_geu1fq.jpg",
+    title: "Chrisan Ojwang",
+    category: "Events",
+  },
+  {
+    src: "https://res.cloudinary.com/da0mkvthw/image/upload/v1771509854/Barbarians_rugby_l8h0en.jpg",
+    title: "Barbarians Rugby",
+    category: "Sports",
+  },
 ];
 
 const Gallery = () => {
@@ -35,7 +73,6 @@ const Gallery = () => {
         subtitle="A visual journey through life at Kakamega School."
         backgroundImage={heroImage}
       />
-
       <section className="section-padding bg-background">
         <div className="container mx-auto max-w-5xl">
           {/* Filters */}
@@ -54,7 +91,6 @@ const Gallery = () => {
               </button>
             ))}
           </div>
-
           {/* Grid */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {filtered.map((photo, i) => (
@@ -67,7 +103,12 @@ const Gallery = () => {
                 className="group relative rounded-xl overflow-hidden cursor-pointer aspect-[4/3]"
                 onClick={() => setLightbox(i)}
               >
-                <img src={photo.src} alt={photo.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy" />
+                <img
+                  src={photo.src}
+                  alt={photo.title}
+                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                  loading="lazy"
+                />
                 <div className="absolute inset-0 bg-foreground/0 group-hover:bg-foreground/40 transition-colors flex items-end">
                   <div className="p-4 translate-y-full group-hover:translate-y-0 transition-transform">
                     <p className="text-primary-foreground font-semibold">{photo.title}</p>
@@ -79,7 +120,6 @@ const Gallery = () => {
           </div>
         </div>
       </section>
-
       {/* Lightbox */}
       <AnimatePresence>
         {lightbox !== null && (
@@ -90,7 +130,10 @@ const Gallery = () => {
             className="fixed inset-0 z-[100] bg-foreground/90 flex items-center justify-center p-4"
             onClick={() => setLightbox(null)}
           >
-            <button className="absolute top-6 right-6 text-primary-foreground" onClick={() => setLightbox(null)}>
+            <button
+              className="absolute top-6 right-6 text-primary-foreground"
+              onClick={() => setLightbox(null)}
+            >
               <X className="w-8 h-8" />
             </button>
             <img
