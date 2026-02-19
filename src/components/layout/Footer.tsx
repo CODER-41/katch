@@ -15,7 +15,7 @@ const Footer = () => {
               <h3 className="font-display text-xl font-bold">Kakamega School</h3>
             </div>
             <p className="text-sm opacity-80 leading-relaxed">
-              A premier national school nurturing leaders since 1932. Home of Katch.
+              A premier national school nurturing leaders since 1932. <em>"The School We Know"</em>
             </p>
           </div>
 
@@ -50,15 +50,15 @@ const Footer = () => {
             <ul className="space-y-3 text-sm opacity-80">
               <li className="flex items-start gap-2">
                 <MapPin className="w-4 h-4 mt-0.5 shrink-0" />
-                P.O. Box 340, Kakamega, Kenya
+                P.O. Box 90-50100, Kakamega
               </li>
               <li className="flex items-center gap-2">
                 <Phone className="w-4 h-4 shrink-0" />
-                +254 700 000 000
+                0759340116
               </li>
               <li className="flex items-center gap-2">
                 <Mail className="w-4 h-4 shrink-0" />
-                info@kakamegaschool.ac.ke
+                kakamegasch@gmail.com
               </li>
             </ul>
           </div>

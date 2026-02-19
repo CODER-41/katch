@@ -30,7 +30,7 @@ const News = () => {
       <PageHero
         title="News & Events"
         subtitle="Stay updated with the latest happenings at Kakamega School."
-        backgroundImage="https://res.cloudinary.com/da0mkvthw/image/upload/v1771530037/Tuition_Block_qc0z0n.jpg"
+        backgroundImage="https://res.cloudinary.com/da0mkvthw/image/upload/v1771530042/tuition_square_t7zcrl.jpg"
       />
 
       {/* News */}
