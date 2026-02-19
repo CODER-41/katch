@@ -3,11 +3,20 @@ import { motion, AnimatePresence } from "framer-motion";
 import { X } from "lucide-react";
 import Layout from "@/components/layout/Layout";
 import PageHero from "@/components/common/PageHero";
-import heroImage from "@/assets/hero-school.jpg";
 
 const categories = ["All", "Academics", "Sports", "Events", "Facilities"];
 
 const photos = [
+  {
+    src: "https://res.cloudinary.com/da0mkvthw/image/upload/v1771530049/learners_opufyp.jpg",
+    title: "Learners",
+    category: "Academics",
+  },
+  {
+    src: "https://res.cloudinary.com/da0mkvthw/image/upload/v1771530054/students_jlv803.jpg",
+    title: "Students",
+    category: "Academics",
+  },
   {
     src: "https://res.cloudinary.com/da0mkvthw/image/upload/v1771527328/Vikings_eu7zfb.jpg",
     title: "Vikings",
@@ -63,6 +72,11 @@ const photos = [
     title: "The Green Commandos Reign",
     category: "Sports",
   },
+  {
+    src: "https://res.cloudinary.com/da0mkvthw/image/upload/v1771527218/download_srjlpm.jpg",
+    title: "Kakamega School Sports",
+    category: "Sports",
+  },
 ];
 
 const Gallery = () => {
@@ -76,7 +90,7 @@ const Gallery = () => {
       <PageHero
         title="Gallery"
         subtitle="A visual journey through life at Kakamega School."
-        backgroundImage={heroImage}
+        backgroundImage="https://res.cloudinary.com/da0mkvthw/image/upload/v1771527193/kakamega_school_mfkgjc.webp"
       />
       <section className="section-padding bg-background">
         <div className="container mx-auto max-w-5xl">

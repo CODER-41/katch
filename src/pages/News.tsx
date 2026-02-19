@@ -3,7 +3,6 @@ import { Clock, ArrowRight } from "lucide-react";
 import { Link } from "react-router-dom";
 import Layout from "@/components/layout/Layout";
 import PageHero from "@/components/common/PageHero";
-import heroImage from "@/assets/hero-school.jpg";
 
 const allNews = [
   { title: "KCSE 2025 Results: Record Performance", excerpt: "Kakamega School records the best KCSE results in its history with a mean grade of A-.", date: "Jan 15, 2026", category: "Academics" },
@@ -31,7 +30,7 @@ const News = () => {
       <PageHero
         title="News & Events"
         subtitle="Stay updated with the latest happenings at Kakamega School."
-        backgroundImage={heroImage}
+        backgroundImage="https://res.cloudinary.com/da0mkvthw/image/upload/v1771530037/Tuition_Block_qc0z0n.jpg"
       />
 
       {/* News */}
