@@ -6,7 +6,7 @@ import PageHero from "@/components/common/PageHero";
 
 const notableAlumni = [
   { name: "Hon. Moody Awori", achievement: "Former Vice President of Kenya", desc: "Served as Kenya's 9th Vice President (2003-2008) and held multiple ministerial positions. A distinguished lawyer and statesman, his leadership exemplified the discipline and excellence instilled at Kakamega School." },
-  { name: "Hon. Najib Balala", achievement: "Cabinet Secretary & Tourism Pioneer", desc: "Long-serving Cabinet Secretary for Tourism and Wildlife, instrumental in transforming Kenya's tourism sector. His vision and dedication reflect the all-round education that shaped him at Katch." },
+  { name: "Hon. Najib Balala", achievement: "Former Cabinet Secretary for Tourism & Wildlife", desc: "Former Cabinet Secretary for Tourism and Wildlife, instrumental in transforming Kenya's tourism sector. His vision and dedication reflect the all-round education that shaped him at Katch." },
   { name: "Hon. Kenneth Marende", achievement: "9th Speaker of National Assembly", desc: "Served as Speaker of Kenya's National Assembly (2008-2013), presiding over critical constitutional reforms. His impartiality and legal acumen trace back to the values learned at Katch." },
   { name: "Dr. Boni Khalwale", achievement: "Senator & Medical Doctor", desc: "A respected politician and medical practitioner, serving as Senator for Kakamega County. His commitment to public service embodies the leadership culture nurtured at Kakamega School." },
   { name: "Hon. Amos Wako", achievement: "Former Attorney General of Kenya", desc: "Served as Kenya's Attorney General for 20 years (1991-2011), one of the longest-serving in the Commonwealth. His legal expertise and integrity reflect the academic rigor of his alma mater." },
@@ -26,11 +26,24 @@ const fadeUp = {
 const Alumni = () => {
   return (
     <Layout>
-      <PageHero
-        title="Alumni"
-        subtitle="Once a Katcherian always a Katcherian."
-        backgroundImage="https://res.cloudinary.com/da0mkvthw/image/upload/v1771530979/katch_teke0a.jpg"
-      />
+      {/* Custom Hero for Alumni */}
+      <section className="relative min-h-[340px] md:min-h-[420px] flex items-end justify-center overflow-hidden">
+        <img
+          src="https://res.cloudinary.com/da0mkvthw/image/upload/v1771530979/katch_teke0a.jpg"
+          alt=""
+          className="absolute inset-0 w-full h-full object-cover object-top"
+          loading="eager"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-white/95 via-white/60 to-transparent" />
+        <div className="relative z-10 text-center px-4 py-8 max-w-3xl mx-auto">
+          <h1 className="font-display text-4xl md:text-5xl lg:text-6xl font-bold text-black mb-4">
+            Alumni
+          </h1>
+          <p className="text-lg md:text-xl text-black/80 max-w-2xl mx-auto">
+            Once a Katcherian always a Katcherian.
+          </p>
+        </div>
+      </section>
 
       {/* Notable Alumni */}
       <section className="section-padding bg-background">
@@ -43,11 +56,9 @@ const Alumni = () => {
             />
           </div>
           <div className="text-center mb-12">
-            <h2 className="font-display text-3xl md:text-4xl font-bold text-foreground mb-4">The School We Know</h2>
+            <h2 className="font-display text-3xl md:text-4xl font-bold text-foreground mb-4">The School We Know: A Legacy of Grit and Glory</h2>
             <p className="text-muted-foreground max-w-3xl mx-auto">
-              Kakamega School has been a national melting pot, producing leaders who have shaped Kenya's legal, political, and social landscape. 
-              The school's disciplined, all-round culture—renowned for both academic excellence and the legendary Green Commandos football team—has 
-              consistently prepared students for national leadership.
+              In the "School We Know," leadership isn't just taught in a hall; it's forged on the pitch and in the scrum. Kakamega School has a unique identity where the line between a school team and a professional sports entity blurs, creating a culture of excellence that stays with its alumni for life.
             </p>
           </div>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
