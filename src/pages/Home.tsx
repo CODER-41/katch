@@ -81,7 +81,7 @@ const Home = () => {
           >
             <img
               src={schoolBadge}
-              alt="Kakamega High School Badge"
+              alt="Kakamega School Badge"
               className="w-28 h-28 md:w-36 md:h-36 mx-auto drop-shadow-[0_0_20px_rgba(255,200,0,0.3)] rounded-full border-2 border-gold/30"
             />
           </motion.div>
@@ -104,7 +104,7 @@ const Home = () => {
             className="font-display text-5xl sm:text-6xl md:text-8xl font-extrabold text-white mb-4 leading-[0.95] drop-shadow-[0_4px_30px_rgba(0,0,0,0.5)]"
           >
             Kakamega
-            <span className="block text-gold">High School</span>
+            <span className="block text-gold">School</span>
           </motion.h1>
 
           {/* Tagline */}
@@ -114,7 +114,7 @@ const Home = () => {
             transition={{ duration: 0.6, delay: 0.5 }}
             className="text-white/80 text-base md:text-xl max-w-2xl mx-auto mb-6 font-body font-light"
           >
-            A premier national school nurturing academic excellence, character, and leadership since <strong className="text-gold font-semibold">1932</strong>.
+            A national school nurturing academic excellence, character, and leadership since <strong className="text-gold font-semibold">1932</strong>.
           </motion.p>
 
           {/* CTA button */}

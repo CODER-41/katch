@@ -1,8 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { Lock, Mail, Eye, EyeOff, Shield } from "lucide-react";
-import { supabase } from "@/integrations/supabase/client";
+import { Lock, Mail, Eye, EyeOff } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -21,35 +20,18 @@ const AdminLogin = () => {
     e.preventDefault();
     setLoading(true);
 
-    const { error } = await supabase.auth.signInWithPassword({ email, password });
-
-    if (error) {
-      toast({ title: "Login Failed", description: error.message, variant: "destructive" });
+    // Stub function - Supabase removed
+    console.warn("Supabase removed - wire up your own backend here");
+    
+    // Mock login failure for now
+    setTimeout(() => {
+      toast({ 
+        title: "Auth Not Configured", 
+        description: "Supabase has been removed. Wire up your own authentication backend.", 
+        variant: "destructive" 
+      });
       setLoading(false);
-      return;
-    }
-
-    // Check admin role
-    const { data: { user } } = await supabase.auth.getUser();
-    if (!user) { setLoading(false); return; }
-
-    const { data: roleData } = await supabase
-      .from("user_roles")
-      .select("role")
-      .eq("user_id", user.id)
-      .eq("role", "admin")
-      .maybeSingle();
-
-    if (!roleData) {
-      await supabase.auth.signOut();
-      toast({ title: "Access Denied", description: "You do not have admin privileges.", variant: "destructive" });
-      setLoading(false);
-      return;
-    }
-
-    toast({ title: "Welcome back!", description: "Logged in to Admin Dashboard." });
-    navigate("/admin/dashboard");
-    setLoading(false);
+    }, 500);
   };
 
   return (
@@ -63,12 +45,11 @@ const AdminLogin = () => {
         {/* Header */}
         <div className="text-center mb-8">
           <div className="flex justify-center mb-4">
-            <div className="relative">
-              <img src={schoolBadge} alt="Kakamega School Badge" className="w-20 h-20 rounded-full object-cover border-4 border-primary shadow-lg" />
-              <div className="absolute -bottom-1 -right-1 bg-primary rounded-full p-1.5">
-                <Shield className="w-3.5 h-3.5 text-primary-foreground" />
-              </div>
-            </div>
+            <img
+              src={schoolBadge}
+              alt="Kakamega School Badge"
+              className="w-20 h-20 rounded-full border-4 border-primary shadow-lg object-cover"
+            />
           </div>
           <h1 className="font-display text-2xl font-bold text-foreground">Admin Portal</h1>
           <p className="text-muted-foreground text-sm mt-1">Kakamega School Administration</p>

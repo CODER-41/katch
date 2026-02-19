@@ -5,12 +5,10 @@ import {
   Users, GraduationCap, Building2, BookOpen, Trophy, FlaskConical,
   LogOut, Save, Edit3, X, Check, LayoutDashboard, RefreshCw, Shield
 } from "lucide-react";
-import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/useAuth";
-import schoolBadge from "@/assets/school-badge.jpeg";
 
 interface SchoolStat {
   id: string;
@@ -123,17 +121,19 @@ const AdminDashboard = () => {
 
   const fetchStats = async () => {
     setLoading(true);
-    const { data, error } = await supabase
-      .from("school_stats")
-      .select("*")
-      .order("stat_category")
-      .order("stat_label");
-
-    if (error) {
-      toast({ title: "Error loading stats", description: error.message, variant: "destructive" });
-    } else {
-      setStats(data || []);
-    }
+    
+    // Stub function - Supabase removed
+    console.warn("Supabase removed - wire up your own backend here");
+    
+    // Mock data for demonstration
+    const mockStats: SchoolStat[] = [
+      { id: "1", stat_key: "total_students", stat_value: "2,500+", stat_label: "Total Students", stat_category: "students", updated_at: new Date().toISOString() },
+      { id: "2", stat_key: "teaching_staff", stat_value: "120", stat_label: "Teaching Staff", stat_category: "staff", updated_at: new Date().toISOString() },
+      { id: "3", stat_key: "classrooms", stat_value: "45", stat_label: "Classrooms", stat_category: "facilities", updated_at: new Date().toISOString() },
+      { id: "4", stat_key: "mean_grade", stat_value: "A-", stat_label: "KCSE Mean Grade", stat_category: "academics", updated_at: new Date().toISOString() },
+    ];
+    
+    setStats(mockStats);
     setLoading(false);
   };
 
@@ -142,21 +142,17 @@ const AdminDashboard = () => {
   }, []);
 
   const handleSave = async (id: string, value: string) => {
-    const { error } = await supabase
-      .from("school_stats")
-      .update({ stat_value: value, updated_by: user?.id })
-      .eq("id", id);
-
-    if (error) {
-      toast({ title: "Failed to save", description: error.message, variant: "destructive" });
-    } else {
-      toast({ title: "Saved!", description: "Statistic updated successfully." });
-      setStats((prev) => prev.map((s) => s.id === id ? { ...s, stat_value: value, updated_at: new Date().toISOString() } : s));
-    }
+    // Stub function - Supabase removed
+    console.warn("Supabase removed - wire up your own backend here");
+    
+    toast({ title: "Mock Save", description: "Supabase removed. Wire up your backend to persist changes." });
+    setStats((prev) => prev.map((s) => s.id === id ? { ...s, stat_value: value, updated_at: new Date().toISOString() } : s));
   };
 
   const handleLogout = async () => {
-    await supabase.auth.signOut();
+    // Stub function - Supabase removed
+    console.warn("Supabase removed - wire up your own backend here");
+    
     toast({ title: "Logged out successfully" });
     navigate("/admin/login");
   };
@@ -178,7 +174,9 @@ const AdminDashboard = () => {
       <header className="bg-card border-b border-border sticky top-0 z-50 shadow-sm">
         <div className="container mx-auto px-4 py-3 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <img src={schoolBadge} alt="Badge" className="w-8 h-8 rounded-full object-cover border-2 border-primary" />
+            <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center border-2 border-primary">
+              <Shield className="w-4 h-4 text-primary" />
+            </div>
             <div>
               <h1 className="font-display font-bold text-foreground leading-tight text-sm md:text-base">
                 Admin Dashboard
@@ -189,7 +187,7 @@ const AdminDashboard = () => {
           <div className="flex items-center gap-2">
             <div className="hidden md:flex items-center gap-2 text-xs text-muted-foreground bg-muted px-3 py-1.5 rounded-full">
               <Shield className="w-3 h-3 text-primary" />
-              <span>{user?.email}</span>
+              <span>{user?.email || "No user"}</span>
             </div>
             <Button variant="outline" size="sm" onClick={() => navigate("/")} className="hidden md:flex gap-1.5 text-xs">
               <LayoutDashboard className="w-3.5 h-3.5" /> View Site

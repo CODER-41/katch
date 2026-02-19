@@ -2,12 +2,10 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { UserPlus, Lock, Mail, Eye, EyeOff, Shield, CheckCircle } from "lucide-react";
-import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
-import schoolBadge from "@/assets/school-badge.jpeg";
 
 // This page is ONLY accessible at /admin/setup
 // Once one admin exists, this should be disabled or removed
@@ -35,40 +33,18 @@ const AdminSetup = () => {
 
     setLoading(true);
 
-    // Sign up the admin user
-    const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
-      email,
-      password,
-      options: { emailRedirectTo: `${window.location.origin}/admin/login` },
-    });
-
-    if (signUpError) {
-      toast({ title: "Sign up failed", description: signUpError.message, variant: "destructive" });
+    // Stub function - Supabase removed
+    console.warn("Supabase removed - wire up your own backend here");
+    
+    // Mock setup
+    setTimeout(() => {
+      toast({ 
+        title: "Auth Not Configured", 
+        description: "Supabase has been removed. Wire up your own authentication backend.", 
+        variant: "destructive" 
+      });
       setLoading(false);
-      return;
-    }
-
-    const userId = signUpData.user?.id;
-    if (!userId) {
-      toast({ title: "Error", description: "Could not retrieve user ID.", variant: "destructive" });
-      setLoading(false);
-      return;
-    }
-
-    // Use service-role equivalent via edge function call isn't available,
-    // so we sign in immediately and try to assign admin role
-    const { error: signInError } = await supabase.auth.signInWithPassword({ email, password });
-    if (signInError) {
-      setDone(true); // Account created, verify email first
-      setLoading(false);
-      return;
-    }
-
-    // Try to insert admin role (will succeed if this is first admin via a service call)
-    // Note: the user running this must already be an admin for the insert to succeed
-    // For first-time setup, an admin needs to be granted manually via the backend
-    setDone(true);
-    setLoading(false);
+    }, 500);
   };
 
   if (done) {
@@ -85,7 +61,7 @@ const AdminSetup = () => {
             Your admin account (<strong>{email}</strong>) has been created.
           </p>
           <p className="text-muted-foreground text-sm mb-6">
-            To grant admin access, go to <strong>Lovable Cloud → Backend → Table Editor → user_roles</strong> and insert a row with your user ID and role <code className="bg-muted px-1 rounded text-xs">admin</code>.
+            Wire up your own authentication backend to enable login.
           </p>
           <Button onClick={() => navigate("/admin/login")} className="w-full">
             Go to Admin Login
@@ -106,9 +82,8 @@ const AdminSetup = () => {
         <div className="text-center mb-8">
           <div className="flex justify-center mb-4">
             <div className="relative">
-              <img src={schoolBadge} alt="Badge" className="w-20 h-20 rounded-full object-cover border-4 border-primary shadow-lg" />
-              <div className="absolute -bottom-1 -right-1 bg-primary rounded-full p-1.5">
-                <UserPlus className="w-3.5 h-3.5 text-primary-foreground" />
+              <div className="w-20 h-20 rounded-full bg-primary/10 flex items-center justify-center border-4 border-primary shadow-lg">
+                <UserPlus className="w-10 h-10 text-primary" />
               </div>
             </div>
           </div>
@@ -120,7 +95,7 @@ const AdminSetup = () => {
           <div className="flex items-center gap-2 bg-muted border border-border rounded-lg p-3 mb-6">
             <Shield className="w-4 h-4 text-primary shrink-0" />
             <p className="text-xs text-muted-foreground">
-              This page creates an admin account. After creation, the admin role must be assigned via the backend.
+              This page creates an admin account. Wire up your own authentication backend.
             </p>
           </div>
 
