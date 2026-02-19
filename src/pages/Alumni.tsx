@@ -3,12 +3,13 @@ import { Link } from "react-router-dom";
 import { ArrowRight, GraduationCap, Heart, Users } from "lucide-react";
 import Layout from "@/components/layout/Layout";
 import PageHero from "@/components/common/PageHero";
-import alumniImage from "@/assets/alumni.jpg";
 
 const notableAlumni = [
-  { name: "Dr. Wycliffe Oparanya", achievement: "Former Governor, Kakamega County", desc: "A distinguished alumnus who served as the Governor of Kakamega County and has been instrumental in development across western Kenya." },
-  { name: "Prof. Mary Abukutsa", achievement: "Agricultural Scientist", desc: "A leading researcher in indigenous vegetables, Prof. Abukutsa has been recognized internationally for her contributions to food security." },
-  { name: "Eng. Patrick Wainaina", achievement: "CEO, Major Engineering Firm", desc: "A successful engineer and business leader who has overseen major infrastructure projects across East Africa." },
+  { name: "Hon. Moody Awori", achievement: "Former Vice President of Kenya", desc: "Served as Kenya's 9th Vice President (2003-2008) and held multiple ministerial positions. A distinguished lawyer and statesman, his leadership exemplified the discipline and excellence instilled at Kakamega School." },
+  { name: "Hon. Najib Balala", achievement: "Cabinet Secretary & Tourism Pioneer", desc: "Long-serving Cabinet Secretary for Tourism and Wildlife, instrumental in transforming Kenya's tourism sector. His vision and dedication reflect the all-round education that shaped him at Katch." },
+  { name: "Hon. Kenneth Marende", achievement: "9th Speaker of National Assembly", desc: "Served as Speaker of Kenya's National Assembly (2008-2013), presiding over critical constitutional reforms. His impartiality and legal acumen trace back to the values learned at Katch." },
+  { name: "Dr. Boni Khalwale", achievement: "Senator & Medical Doctor", desc: "A respected politician and medical practitioner, serving as Senator for Kakamega County. His commitment to public service embodies the leadership culture nurtured at Kakamega School." },
+  { name: "Hon. Amos Wako", achievement: "Former Attorney General of Kenya", desc: "Served as Kenya's Attorney General for 20 years (1991-2011), one of the longest-serving in the Commonwealth. His legal expertise and integrity reflect the academic rigor of his alma mater." },
 ];
 
 const waysToGiveBack = [
@@ -27,23 +28,37 @@ const Alumni = () => {
     <Layout>
       <PageHero
         title="Alumni"
-        subtitle="Once a Green Commando, always a Green Commando."
-        backgroundImage={alumniImage}
+        subtitle="Once a Katcherian always a Katcherian."
+        backgroundImage="https://res.cloudinary.com/da0mkvthw/image/upload/v1771530979/katch_teke0a.jpg"
       />
 
       {/* Notable Alumni */}
       <section className="section-padding bg-background">
-        <div className="container mx-auto max-w-4xl">
-          <h2 className="font-display text-3xl md:text-4xl font-bold text-foreground mb-10 text-center">Notable Alumni</h2>
-          <div className="grid md:grid-cols-3 gap-6">
+        <div className="container mx-auto max-w-6xl">
+          <div className="flex justify-center mb-8">
+            <img 
+              src="https://res.cloudinary.com/da0mkvthw/image/upload/v1771530999/kakamega_school_alumni_association_lbuqas.png" 
+              alt="Kakamega School Alumni Association" 
+              className="h-32 w-auto object-contain"
+            />
+          </div>
+          <div className="text-center mb-12">
+            <h2 className="font-display text-3xl md:text-4xl font-bold text-foreground mb-4">The School We Know</h2>
+            <p className="text-muted-foreground max-w-3xl mx-auto">
+              Kakamega School has been a national melting pot, producing leaders who have shaped Kenya's legal, political, and social landscape. 
+              The school's disciplined, all-round culture—renowned for both academic excellence and the legendary Green Commandos football team—has 
+              consistently prepared students for national leadership.
+            </p>
+          </div>
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             {notableAlumni.map((person, i) => (
-              <motion.div key={person.name} variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }} custom={i} className="bg-card rounded-xl p-6 border border-border text-center">
-                <div className="w-20 h-20 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-4">
+              <motion.div key={person.name} variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }} custom={i} className="bg-card rounded-xl p-6 border border-border">
+                <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center mb-4">
                   <GraduationCap className="w-8 h-8 text-primary" />
                 </div>
                 <h3 className="font-display text-lg font-semibold text-foreground">{person.name}</h3>
-                <p className="text-sm text-primary font-medium mb-2">{person.achievement}</p>
-                <p className="text-sm text-muted-foreground">{person.desc}</p>
+                <p className="text-sm text-primary font-medium mb-3">{person.achievement}</p>
+                <p className="text-sm text-muted-foreground leading-relaxed">{person.desc}</p>
               </motion.div>
             ))}
           </div>
