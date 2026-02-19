@@ -43,7 +43,7 @@ const Admissions = () => {
 
       {/* Process */}
       <section className="section-padding bg-background">
-        <div className="container mx-auto max-w-4xl">
+        <div className="container mx-auto max-w-7xl px-4">
           <h2 className="font-display text-3xl md:text-4xl font-bold text-foreground mb-10 text-center">
             Admission Process
           </h2>
