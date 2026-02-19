@@ -1,7 +1,6 @@
 import { motion } from "framer-motion";
 import { Target, Eye, Heart, Award, Users, BookOpen } from "lucide-react";
 import Layout from "@/components/layout/Layout";
-import heroImage from "@/assets/admin-block.jpeg";
 
 const values = [
   { icon: BookOpen, title: "Academic Excellence", desc: "We pursue the highest standards of learning and intellectual development." },
@@ -26,11 +25,11 @@ const About = () => {
     <Layout>
       {/* Full-width hero with split content */}
       <section className="relative min-h-[600px] md:min-h-[700px] flex items-end overflow-hidden">
-        <img src={heroImage} alt="Kakamega School Administration Block" className="absolute inset-0 w-full h-full object-cover object-center" loading="eager" />
+        <img src="https://res.cloudinary.com/da0mkvthw/image/upload/v1771530046/Hall_c9plwo.jpg" alt="Kakamega School Hall" className="absolute inset-0 w-full h-full object-cover" style={{ objectPosition: '50% 40%' }} loading="eager" />
         <div className="absolute inset-0 bg-gradient-to-r from-black/75 via-black/20 to-transparent" />
 
         <div className="relative z-10 w-full container mx-auto px-4 pb-16 pt-32">
-          <div className="grid md:grid-cols-2 gap-10 items-end max-w-5xl">
+          <div className="max-w-5xl">
             {/* About Us heading — left side, on the dark gradient */}
             <motion.div initial={{ opacity: 0, x: -30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ duration: 0.6 }}>
               <p className="text-gold font-bold tracking-[0.2em] uppercase text-xs mb-3">Est. 1932</p>
@@ -41,40 +40,32 @@ const About = () => {
                 Nurturing excellence since 1932 — The home of Katch, a premier national school in the heart of Western Kenya.
               </p>
             </motion.div>
-
-            {/* Our History — right side, glass card */}
-            <motion.div initial={{ opacity: 0, x: 30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ duration: 0.6, delay: 0.2 }}
-              className="bg-black/40 backdrop-blur-md border border-white/15 rounded-xl p-6 md:p-8"
-            >
-              <h2 className="font-display text-2xl md:text-3xl font-bold text-white mb-4">Our History</h2>
-              <div className="text-white/80 space-y-3 text-sm md:text-base leading-relaxed">
-                <p>
-                  Kakamega High School was established in 1932 as one of Kenya's oldest and most prestigious national secondary schools, growing from humble beginnings into a leading institution recognised across East Africa.
-                </p>
-                <p>
-                  Affectionately known as "Katch," the school has produced thousands of graduates who have become leaders in government, business, academia, and the arts.
-                </p>
-              </div>
-            </motion.div>
           </div>
         </div>
       </section>
 
-      {/* Mission & Vision */}
+      {/* History, Mission & Vision */}
       <section className="section-padding bg-section-alt">
-        <div className="container mx-auto max-w-4xl">
-          <div className="grid md:grid-cols-2 gap-8">
+        <div className="container mx-auto max-w-7xl px-4">
+          <div className="grid md:grid-cols-3 gap-6">
             <motion.div variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }} custom={0} className="bg-card rounded-xl p-8 shadow-sm border border-border">
-              <Target className="w-10 h-10 text-primary mb-4" />
-              <h3 className="font-display text-2xl font-bold text-foreground mb-3">Our Mission</h3>
-              <p className="text-muted-foreground leading-relaxed">
-                To provide quality education that nurtures intellectual, moral, and physical development, empowering students to become responsible, innovative, and globally competitive citizens.
+              <BookOpen className="w-10 h-10 text-primary mb-4" />
+              <h3 className="font-display text-2xl font-bold text-foreground mb-3">Our History</h3>
+              <p className="text-muted-foreground leading-relaxed text-sm">
+                Established in 1932 as one of Kenya's oldest and most prestigious national secondary schools. Affectionately known as "Katch," the school has produced thousands of graduates who have become leaders in government, business, academia, and the arts.
               </p>
             </motion.div>
             <motion.div variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }} custom={1} className="bg-card rounded-xl p-8 shadow-sm border border-border">
+              <Target className="w-10 h-10 text-primary mb-4" />
+              <h3 className="font-display text-2xl font-bold text-foreground mb-3">Our Mission</h3>
+              <p className="text-muted-foreground leading-relaxed text-sm">
+                To provide quality education that nurtures intellectual, moral, and physical development, empowering students to become responsible, innovative, and globally competitive citizens.
+              </p>
+            </motion.div>
+            <motion.div variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }} custom={2} className="bg-card rounded-xl p-8 shadow-sm border border-border">
               <Eye className="w-10 h-10 text-primary mb-4" />
               <h3 className="font-display text-2xl font-bold text-foreground mb-3">Our Vision</h3>
-              <p className="text-muted-foreground leading-relaxed">
+              <p className="text-muted-foreground leading-relaxed text-sm">
                 To be a centre of academic excellence, innovation, and character formation that produces all-round individuals ready to transform society and contribute to national and global development.
               </p>
             </motion.div>

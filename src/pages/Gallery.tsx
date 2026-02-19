@@ -18,6 +18,11 @@ const photos = [
     category: "Academics",
   },
   {
+    src: "https://res.cloudinary.com/da0mkvthw/image/upload/v1771530981/Electricity_Lab_gds10z.jpg",
+    title: "Electricity Lab",
+    category: "Academics",
+  },
+  {
     src: "https://res.cloudinary.com/da0mkvthw/image/upload/v1771527328/Vikings_eu7zfb.jpg",
     title: "Vikings",
     category: "Sports",
@@ -76,6 +81,51 @@ const photos = [
     src: "https://res.cloudinary.com/da0mkvthw/image/upload/v1771527218/download_srjlpm.jpg",
     title: "Kakamega School Sports",
     category: "Sports",
+  },
+  {
+    src: "https://res.cloudinary.com/da0mkvthw/image/upload/v1771530981/Electricity_Lab_gds10z.jpg",
+    title: "ELECTRICITY LAB",
+    category: "Facilities",
+  },
+  {
+    src: "https://res.cloudinary.com/da0mkvthw/image/upload/v1771531145/katch_gate_fjhso1.jpg",
+    title: "Katch Gate",
+    category: "General",
+  },
+  {
+    src: "https://res.cloudinary.com/da0mkvthw/image/upload/v1771531105/multipurpose_qodurt.jpg",
+    title: "Multipurpose Hall",
+    category: "Facilities",
+  },
+  {
+    src: "https://res.cloudinary.com/da0mkvthw/image/upload/v1771531039/kakamega_school_Admin_Block_owe5ax.jpg",
+    title: "Admin Block",
+    category: "Facilities",
+  },
+  {
+    src: "https://res.cloudinary.com/da0mkvthw/image/upload/v1771530971/paths_scxwn9.jpg",
+    title: "School Paths",
+    category: "Facilities",
+  },
+  {
+    src: "https://res.cloudinary.com/da0mkvthw/image/upload/v1771530037/Tuition_Block_qc0z0n.jpg",
+    title: "Tuition Block",
+    category: "Facilities",
+  },
+  {
+    src: "https://res.cloudinary.com/da0mkvthw/image/upload/v1771527193/kakamega_school_mfkgjc.webp",
+    title: "Kakamega School",
+    category: "Facilities",
+  },
+  {
+    src: "https://res.cloudinary.com/da0mkvthw/image/upload/v1771530042/tuition_square_t7zcrl.jpg",
+    title: "Tuition Square",
+    category: "Facilities",
+  },
+  {
+    src: "https://res.cloudinary.com/da0mkvthw/image/upload/v1771531426/Scania_libubt.jpg",
+    title: "School Bus",
+    category: "General",
   },
 ];
 
