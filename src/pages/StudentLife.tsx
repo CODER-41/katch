@@ -2,7 +2,6 @@ import { motion } from "framer-motion";
 import { Trophy, Music, Microscope, Globe2, Volleyball, Drama } from "lucide-react";
 import Layout from "@/components/layout/Layout";
 import PageHero from "@/components/common/PageHero";
-import studentLifeImage from "@/assets/student-life.jpg";
 import gallery1 from "@/assets/gallery-1.jpg";
 import gallery2 from "@/assets/gallery-2.jpg";
 
@@ -28,11 +27,25 @@ const fadeUp = {
 const StudentLife = () => {
   return (
     <Layout>
-      <PageHero
-        title="Student Life"
-        subtitle="Beyond the classroom — where character is built and memories are made."
-        backgroundImage={studentLifeImage}
-      />
+      {/* Custom Hero for Student Life */}
+      <section className="relative min-h-[340px] md:min-h-[420px] flex items-center justify-center overflow-hidden">
+        <img
+          src="https://res.cloudinary.com/da0mkvthw/image/upload/v1771527320/The_green_commandos_qr4pw7.jpg"
+          alt=""
+          className="absolute inset-0 w-full h-full object-cover"
+          style={{ objectPosition: '50% 35%' }}
+          loading="eager"
+        />
+        <div className="absolute inset-0 hero-gradient" />
+        <div className="relative z-10 text-center px-4 py-16 max-w-3xl mx-auto">
+          <h1 className="font-display text-4xl md:text-5xl lg:text-6xl font-bold text-primary-foreground mb-4">
+            Student Life
+          </h1>
+          <p className="text-lg md:text-xl text-primary-foreground/80 max-w-2xl mx-auto">
+            Beyond the classroom — where character is built and memories are made.
+          </p>
+        </div>
+      </section>
 
       {/* Activities */}
       <section className="section-padding bg-background">

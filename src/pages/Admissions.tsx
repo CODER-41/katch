@@ -3,7 +3,6 @@ import { Link } from "react-router-dom";
 import { FileText, CheckCircle, CalendarDays, HelpCircle, ArrowRight } from "lucide-react";
 import Layout from "@/components/layout/Layout";
 import PageHero from "@/components/common/PageHero";
-import heroImage from "@/assets/hero-school.jpg";
 
 const steps = [
   { step: "1", title: "Obtain KCPE Results", desc: "Ensure you have your Kenya Certificate of Primary Education results slip." },
@@ -39,7 +38,7 @@ const Admissions = () => {
       <PageHero
         title="Admissions"
         subtitle="Join Katch — Begin your journey at Kakamega School."
-        backgroundImage={heroImage}
+        backgroundImage="https://res.cloudinary.com/da0mkvthw/image/upload/v1771531181/The_School_We_Know_lhuqx7.jpg"
       />
 
       {/* Process */}

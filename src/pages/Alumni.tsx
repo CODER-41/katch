@@ -27,11 +27,11 @@ const Alumni = () => {
   return (
     <Layout>
       {/* Custom Hero for Alumni */}
-      <section className="relative min-h-[340px] md:min-h-[420px] flex items-end justify-center overflow-hidden">
+      <section className="relative min-h-[340px] md:min-h-[420px] flex items-end justify-center overflow-hidden bg-white">
         <img
           src="https://res.cloudinary.com/da0mkvthw/image/upload/v1771530979/katch_teke0a.jpg"
           alt=""
-          className="absolute inset-0 w-full h-full object-cover object-top"
+          className="absolute inset-0 w-full h-full object-contain object-center"
           loading="eager"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-white/95 via-white/60 to-transparent" />
@@ -58,7 +58,7 @@ const Alumni = () => {
           <div className="text-center mb-12">
             <h2 className="font-display text-3xl md:text-4xl font-bold text-foreground mb-4">The School We Know: A Legacy of Grit and Glory</h2>
             <p className="text-muted-foreground max-w-3xl mx-auto">
-              In the "School We Know," leadership isn't just taught in a hall; it's forged on the pitch and in the scrum. Kakamega School has a unique identity where the line between a school team and a professional sports entity blurs, creating a culture of excellence that stays with its alumni for life.
+              In the "School We Know," leadership isn't just taught in a hall; it's forged on the pitch and in the scrum. Kakamega School has a unique identity where the line between a school Academics and a professional sports entity blurs, creating a culture of excellence that stays with its alumni for life.
             </p>
           </div>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">

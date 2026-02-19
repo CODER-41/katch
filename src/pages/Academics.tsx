@@ -2,7 +2,6 @@ import { motion } from "framer-motion";
 import { BookOpen, FlaskConical, Globe, Calculator, Palette, Dumbbell, TrendingUp } from "lucide-react";
 import Layout from "@/components/layout/Layout";
 import PageHero from "@/components/common/PageHero";
-import academicsImage from "@/assets/academics.jpg";
 
 const subjects = [
   { icon: Calculator, name: "Mathematics", desc: "Pure and applied mathematics with practical problem solving." },
@@ -30,7 +29,7 @@ const Academics = () => {
       <PageHero
         title="Academics"
         subtitle="A rigorous curriculum designed to develop well-rounded scholars."
-        backgroundImage={academicsImage}
+        backgroundImage="https://res.cloudinary.com/da0mkvthw/image/upload/v1771530054/students_jlv803.jpg"
       />
 
       {/* CBC Info */}
