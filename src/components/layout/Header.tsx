@@ -27,11 +27,11 @@ const Header = () => {
           <div className="flex items-center gap-6">
             <span className="flex items-center gap-1.5">
               <Phone className="w-3.5 h-3.5" />
-              +254 700 000 000
+              +254 759 340 116
             </span>
             <span className="flex items-center gap-1.5">
               <Mail className="w-3.5 h-3.5" />
-              info@kakamegaschool.ac.ke
+              kakamegasch@gmail.com
             </span>
           </div>
           <Link

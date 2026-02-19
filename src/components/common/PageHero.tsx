@@ -9,7 +9,7 @@ interface PageHeroProps {
 
 const PageHero = ({ title, subtitle, backgroundImage, children }: PageHeroProps) => {
   return (
-    <section className="relative min-h-[340px] md:min-h-[420px] flex items-center justify-center overflow-hidden">
+    <section className="relative min-h-[340px] md:min-h-[500px] flex items-end justify-center overflow-hidden">
       {backgroundImage && (
         <img
           src={backgroundImage}
@@ -19,7 +19,7 @@ const PageHero = ({ title, subtitle, backgroundImage, children }: PageHeroProps)
         />
       )}
       <div className="absolute inset-0 hero-gradient" />
-      <div className="relative z-10 text-center px-4 py-16 max-w-3xl mx-auto">
+      <div className="relative z-10 text-center px-4 py-12 max-w-3xl mx-auto">
         <h1 className="font-display text-4xl md:text-5xl lg:text-6xl font-bold text-primary-foreground mb-4">
           {title}
         </h1>

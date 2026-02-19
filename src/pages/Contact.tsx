@@ -59,7 +59,7 @@ const Contact = () => {
               <div className="space-y-5">
                 {[
                   { icon: MapPin, label: "Address", value: "P.O. Box 90-50100, Kakamega" },
-                  { icon: Phone, label: "Phone", value: "0759340116" },
+                  { icon: Phone, label: "Phone", value: "+254 759 340 116" },
                   { icon: Mail, label: "Email", value: "kakamegasch@gmail.com" },
                   { icon: Clock, label: "Office Hours", value: "Mon - Fri: 8:00 AM - 5:00 PM" },
                 ].map((item) => (
