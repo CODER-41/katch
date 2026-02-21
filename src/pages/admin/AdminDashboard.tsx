@@ -401,11 +401,13 @@ const AdminDashboard = () => {
                       // Show photo if URL exists
                       <img src={member.photo_url} alt={member.name} className="w-full h-full object-cover" />
                     ) : (
-                      // Show first letter of name if no photo
+                      // Show initials from first and last name if no photo
                       <div className="w-full h-full flex items-center justify-center bg-primary/10">
-                        <span className="text-4xl font-bold text-primary">
-                          {member.name.charAt(0).toUpperCase()}
-                        </span>
+                        <div className="w-20 h-20 rounded-full bg-primary/20 flex items-center justify-center border-2 border-primary/30">
+                          <span className="text-xl font-bold text-primary">
+                            {member.name.split(' ').map(n => n.charAt(0).toUpperCase()).slice(0, 2).join('')}
+                          </span>
+                        </div>
                       </div>
                     )}
                   </div>
