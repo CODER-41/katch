@@ -28,7 +28,7 @@ const photos = [
     category: "Sports",
   },
   {
-    src: "https://res.cloudinary.com/da0mkvthw/image/upload/v1771527320/The_green_commandos_qr4pw7.jpg",
+    src: "https://res.cloudinary.com/da0mkvthw/image/upload/v1771707270/studentlife_jpcxuq.png",
     title: "The Green Commandos",
     category: "Sports",
   },
@@ -68,7 +68,7 @@ const photos = [
     category: "Sports",
   },
   {
-    src: "https://res.cloudinary.com/da0mkvthw/image/upload/v1771509854/Barbarians_rugby_l8h0en.jpg",
+    src: "https://res.cloudinary.com/da0mkvthw/image/upload/v1771699162/rugby_ai2_dzzqyy.jpg",
     title: "Barbarians Rugby",
     category: "Sports",
   },
@@ -78,7 +78,7 @@ const photos = [
     category: "Sports",
   },
   {
-    src: "https://res.cloudinary.com/da0mkvthw/image/upload/v1771527218/download_srjlpm.jpg",
+    src: "https://res.cloudinary.com/da0mkvthw/image/upload/v1771699646/ruby3_akiez8.jpg",
     title: "Kakamega School Sports",
     category: "Sports",
   },

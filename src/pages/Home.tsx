@@ -47,8 +47,8 @@ const newsItems = [
 ];
 
 const quickLinks = [
-  { title: "Academics", desc: "Explore our CBC curriculum and programs", icon: BookOpen, to: "/academics", image: academicsImage },
-  { title: "Student Life", desc: "Sports, clubs, and beyond the classroom", icon: Star, to: "/student-life", image: studentLifeImage },
+  { title: "Academics", desc: "Explore our CBC curriculum and programs", icon: BookOpen, to: "/academics", image: "https://res.cloudinary.com/da0mkvthw/image/upload/v1771530054/students_jlv803.jpg" },
+  { title: "Student Life", desc: "Sports, clubs, and beyond the classroom", icon: Star, to: "/student-life", image: "https://res.cloudinary.com/da0mkvthw/image/upload/v1771707270/studentlife_jpcxuq.png" },
 ];
 
 const fadeUp = {
@@ -189,7 +189,7 @@ const Home = () => {
                     <img
                       src={link.image}
                       alt={link.title}
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                      className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-500"
                       loading="lazy"
                     />
                   </div>
