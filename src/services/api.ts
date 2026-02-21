@@ -101,5 +101,22 @@ export const submitContact = (data: object) =>
     body: JSON.stringify(data)
   }).then(res => res.json())
 
+// TESTIMONIALS
+export const getTestimonials = () =>
+  fetch(`${API_URL}/testimonials/`, { headers: getHeaders() }).then(res => res.json())
+
+export const createTestimonial = (data: object) =>
+  fetch(`${API_URL}/testimonials/`, {
+    method: 'POST',
+    headers: getHeaders(),
+    body: JSON.stringify(data)
+  }).then(res => res.json())
+
+export const deleteTestimonial = (id: number) =>
+  fetch(`${API_URL}/testimonials/${id}`, {
+    method: 'DELETE',
+    headers: getHeaders()
+  }).then(res => res.json())
+
 export const getContactSubmissions = () =>
   fetch(`${API_URL}/contact/`, { headers: getHeaders() }).then(res => res.json())
