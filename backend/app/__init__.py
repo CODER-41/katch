@@ -32,8 +32,25 @@ def create_app():
     with app.app_context():
         db.create_all()
 
-    # Register auth blueprint
+    # Register all blueprints with their URL prefixes
     from app.routes.auth import auth_bp
+    from app.routes.staff import staff_bp
+    from app.routes.news import news_bp
+    from app.routes.events import events_bp
+    from app.routes.gallery import gallery_bp
+    from app.routes.alumni import alumni_bp
+    from app.routes.kcse_results import kcse_bp
+    from app.routes.testimonials import testimonials_bp
+    from app.routes.contact import contact_bp
+
     app.register_blueprint(auth_bp, url_prefix="/api/auth")
+    app.register_blueprint(staff_bp, url_prefix="/api/staff")
+    app.register_blueprint(news_bp, url_prefix="/api/news")
+    app.register_blueprint(events_bp, url_prefix="/api/events")
+    app.register_blueprint(gallery_bp, url_prefix="/api/gallery")
+    app.register_blueprint(alumni_bp, url_prefix="/api/alumni")
+    app.register_blueprint(kcse_bp, url_prefix="/api/kcse")
+    app.register_blueprint(testimonials_bp, url_prefix="/api/testimonials")
+    app.register_blueprint(contact_bp, url_prefix="/api/contact")
 
     return app
