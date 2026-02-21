@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import schoolBadge from "@/assets/school-badge.jpeg";
+import { loginAdmin } from "@/services/api"; // Import the API service
 
 const AdminLogin = () => {
   const [email, setEmail] = useState("");
@@ -20,18 +21,41 @@ const AdminLogin = () => {
     e.preventDefault();
     setLoading(true);
 
-    // Stub function - Supabase removed
-    console.warn("Supabase removed - wire up your own backend here");
-    
-    // Mock login failure for now
-    setTimeout(() => {
-      toast({ 
-        title: "Auth Not Configured", 
-        description: "Supabase has been removed. Wire up your own authentication backend.", 
-        variant: "destructive" 
+    try {
+      // Call Flask backend login endpoint
+      const data = await loginAdmin(email, password);
+
+      if (data.access_token) {
+        // Save JWT token and admin info to localStorage for future requests
+        localStorage.setItem("access_token", data.access_token);
+        localStorage.setItem("admin", JSON.stringify(data.admin));
+
+        // Show success message
+        toast({
+          title: "Login Successful",
+          description: "Welcome to the admin portal!",
+        });
+
+        // Redirect to admin dashboard
+        navigate("/admin/dashboard");
+      } else {
+        // Show error returned from backend
+        toast({
+          title: "Login Failed",
+          description: data.error || "Invalid email or password",
+          variant: "destructive",
+        });
+      }
+    } catch (err) {
+      // Show error if server is unreachable
+      toast({
+        title: "Connection Error",
+        description: "Could not connect to server. Make sure the backend is running.",
+        variant: "destructive",
       });
+    } finally {
       setLoading(false);
-    }, 500);
+    }
   };
 
   return (
