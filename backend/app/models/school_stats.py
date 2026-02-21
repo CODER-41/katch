@@ -8,7 +8,8 @@ class SchoolStat(db.Model):
     stat_key = db.Column(db.String(100), unique=True, nullable=False)  # e.g "students_count"
     stat_value = db.Column(db.String(100), nullable=False)  # e.g "1200"
     stat_label = db.Column(db.String(100))  # e.g "Students Enrolled"
-    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)  # Auto updates on change
+    stat_category = db.Column(db.String(50), default='general')  # e.g "students", "staff", "facilities"
+    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
     def to_dict(self):
         # Returns stat as JSON-friendly dictionary
@@ -17,5 +18,6 @@ class SchoolStat(db.Model):
             'stat_key': self.stat_key,
             'stat_value': self.stat_value,
             'stat_label': self.stat_label,
+            'stat_category': self.stat_category,
             'updated_at': self.updated_at.isoformat()
         }
