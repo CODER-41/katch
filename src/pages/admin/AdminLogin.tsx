@@ -64,24 +64,24 @@ const AdminLogin = () => {
         initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
-        className="w-full max-w-md"
+        className="w-full max-w-lg"
       >
         {/* Header */}
         <div className="text-center mb-8">
-          <div className="flex justify-center mb-4">
+          <div className="flex justify-center mb-6">
             <img
               src={schoolBadge}
               alt="Kakamega School Badge"
-              className="w-20 h-20 rounded-full border-4 border-primary shadow-lg object-cover"
+              className="w-28 h-28 rounded-full border-4 border-primary shadow-lg object-cover"
             />
           </div>
-          <h1 className="font-display text-2xl font-bold text-foreground">Admin Portal</h1>
-          <p className="text-muted-foreground text-sm mt-1">Kakamega School Administration</p>
+          <h1 className="font-display text-3xl font-bold text-foreground">Admin Portal</h1>
+          <p className="text-muted-foreground text-base mt-2">Kakamega School Administration</p>
         </div>
 
         {/* Card */}
-        <div className="bg-card border border-border rounded-2xl shadow-lg p-8">
-          <form onSubmit={handleLogin} className="space-y-5">
+        <div className="bg-card border border-border rounded-2xl shadow-lg p-10">
+          <form onSubmit={handleLogin} className="space-y-6">
             <div className="space-y-2">
               <Label htmlFor="email">Email Address</Label>
               <div className="relative">

@@ -39,10 +39,10 @@ const StudentLife = () => {
         />
         <div className="absolute inset-0 hero-gradient" />
         <div className="relative z-10 text-center px-4 py-16 max-w-3xl mx-auto">
-          <h1 className="font-display text-4xl md:text-5xl lg:text-6xl font-bold text-primary-foreground mb-4">
+          <h1 className="font-display text-5xl md:text-6xl lg:text-7xl font-bold text-primary-foreground mb-4">
             Student Life
           </h1>
-          <p className="text-lg md:text-xl text-primary-foreground/80 max-w-2xl mx-auto">
+          <p className="text-xl md:text-2xl text-primary-foreground/80 max-w-2xl mx-auto">
             Beyond the classroom — where character is built and memories are made.
           </p>
         </div>

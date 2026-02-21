@@ -37,10 +37,10 @@ const Alumni = () => {
         />
         <div className="absolute inset-0 bg-gradient-to-t from-white/95 via-white/60 to-transparent" />
         <div className="relative z-10 text-center px-4 py-8 max-w-3xl mx-auto">
-          <h1 className="font-display text-4xl md:text-5xl lg:text-6xl font-bold text-black mb-4">
+          <h1 className="font-display text-5xl md:text-6xl lg:text-7xl font-bold text-black mb-4">
             Alumni
           </h1>
-          <p className="text-lg md:text-xl text-black/80 max-w-2xl mx-auto">
+          <p className="text-xl md:text-2xl text-black/80 max-w-2xl mx-auto">
             Once a Katcherian always a Katcherian.
           </p>
         </div>
@@ -53,7 +53,7 @@ const Alumni = () => {
             <img 
               src="https://res.cloudinary.com/da0mkvthw/image/upload/v1771530999/kakamega_school_alumni_association_lbuqas.png" 
               alt="Kakamega School Alumni Association" 
-              className="h-32 w-auto object-contain"
+              className="h-64 w-auto object-contain"
             />
           </div>
           <div className="text-center mb-12">
