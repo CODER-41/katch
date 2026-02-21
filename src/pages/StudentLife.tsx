@@ -31,7 +31,7 @@ const StudentLife = () => {
       {/* Custom Hero for Student Life */}
       <section className="relative min-h-[340px] md:min-h-[420px] flex items-center justify-center overflow-hidden">
         <img
-          src="https://res.cloudinary.com/da0mkvthw/image/upload/v1771527320/The_green_commandos_qr4pw7.jpg"
+          src="https://res.cloudinary.com/da0mkvthw/image/upload/v1771707270/studentlife_jpcxuq.png"
           alt=""
           className="absolute inset-0 w-full h-full object-cover"
           style={{ objectPosition: '50% 35%' }}
