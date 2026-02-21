@@ -10,7 +10,7 @@ import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
 import {
   getStaff, createStaff, updateStaff, deleteStaff
-} from "@/services/api"; // Import real API functions
+} from "@/services/api";
 
 // SchoolStat interface matching our backend model
 interface SchoolStat {
@@ -26,7 +26,7 @@ interface SchoolStat {
 interface StaffMember {
   id: string;
   name: string;
-  photo_url: string; // Changed from photo to photo_url to match backend
+  photo_url: string;
   subject: string;
   email: string;
   phone: string;
@@ -150,7 +150,6 @@ const AdminDashboard = () => {
       const data = await res.json();
       setStats(data);
     } catch (err) {
-      // If no stats yet, show empty state
       setStats([]);
     } finally {
       setLoading(false);
@@ -231,7 +230,7 @@ const AdminDashboard = () => {
         toast({ title: "Staff added successfully" });
       }
       // Refresh staff list from backend
-      fetchStaff();
+      await fetchStaff();
       setShowModal(false);
     } catch (err) {
       toast({ title: "Error", description: "Could not save staff", variant: "destructive" });
@@ -245,7 +244,7 @@ const AdminDashboard = () => {
         await deleteStaff(Number(id));
         toast({ title: "Staff deleted successfully" });
         // Refresh staff list
-        fetchStaff();
+        await fetchStaff();
       } catch (err) {
         toast({ title: "Error", description: "Could not delete staff", variant: "destructive" });
       }
@@ -286,7 +285,6 @@ const AdminDashboard = () => {
             </div>
           </div>
           <div className="flex items-center gap-2">
-            {/* Show logged in admin email */}
             <div className="hidden md:flex items-center gap-2 text-xs text-muted-foreground bg-muted px-3 py-1.5 rounded-full">
               <Shield className="w-3 h-3 text-primary" />
               <span>{admin?.email || "Admin"}</span>
@@ -302,7 +300,6 @@ const AdminDashboard = () => {
       </header>
 
       <main className="container mx-auto px-4 py-8">
-        {/* Welcome */}
         <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} className="mb-8">
           <h2 className="font-display text-2xl md:text-3xl font-bold text-foreground">
             School Statistics
@@ -340,7 +337,6 @@ const AdminDashboard = () => {
             <RefreshCw className="w-8 h-8 text-primary animate-spin" />
           </div>
         ) : stats.length === 0 ? (
-          // Show message if no stats in database yet
           <div className="bg-card border border-border rounded-xl p-12 text-center mb-16">
             <FlaskConical className="w-12 h-12 text-muted-foreground mx-auto mb-3" />
             <p className="text-muted-foreground">No stats yet. Add them via the API or seed the database.</p>
@@ -400,8 +396,19 @@ const AdminDashboard = () => {
                   animate={{ opacity: 1, scale: 1 }}
                   className="bg-card border border-border rounded-xl overflow-hidden hover:shadow-lg transition-shadow"
                 >
-                  <div className="aspect-square bg-muted relative">
-                    <img src={member.photo_url} alt={member.name} className="w-full h-full object-cover" />
+                  {/* Photo or initials fallback */}
+                  <div className="aspect-square bg-muted relative flex items-center justify-center">
+                    {member.photo_url ? (
+                      // Show photo if URL exists
+                      <img src={member.photo_url} alt={member.name} className="w-full h-full object-cover" />
+                    ) : (
+                      // Show first letter of name if no photo
+                      <div className="w-full h-full flex items-center justify-center bg-primary/10">
+                        <span className="text-4xl font-bold text-primary">
+                          {member.name.charAt(0).toUpperCase()}
+                        </span>
+                      </div>
+                    )}
                   </div>
                   <div className="p-5">
                     <h3 className="font-display text-lg font-bold text-foreground mb-1">{member.name}</h3>
