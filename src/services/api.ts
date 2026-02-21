@@ -22,14 +22,6 @@ export const loginAdmin = (email: string, password: string) =>
 export const getStaff = () =>
   fetch(`${API_URL}/staff/`, { headers: getHeaders() }).then(res => res.json())
 
-/*************  ✨ Windsurf Command ⭐  *************/
-/**
- * Create a new staff member
- *
- * @param {object} data - StaffMember object (name, photo_url, subject, email, phone, role, is_leadership)
- * @returns {Promise} - Resolves with the newly created staff member object
- */
-/*******  c0447c34-dc6a-462d-8536-8b62958f03b9  *******/
 export const createStaff = (data: object) =>
   fetch(`${API_URL}/staff/`, {
     method: 'POST',
