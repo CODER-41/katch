@@ -8,8 +8,11 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
-import { useAuth } from "@/hooks/useAuth";
+import {
+  getStaff, createStaff, updateStaff, deleteStaff
+} from "@/services/api"; // Import real API functions
 
+// SchoolStat interface matching our backend model
 interface SchoolStat {
   id: string;
   stat_key: string;
@@ -19,13 +22,16 @@ interface SchoolStat {
   updated_at: string;
 }
 
+// StaffMember interface matching our backend model
 interface StaffMember {
   id: string;
   name: string;
-  photo: string;
+  photo_url: string; // Changed from photo to photo_url to match backend
   subject: string;
   email: string;
   phone: string;
+  role: string;
+  is_leadership: boolean;
 }
 
 const categoryConfig: Record<string, { label: string; icon: React.ElementType; color: string }> = {
@@ -87,7 +93,6 @@ const StatCard = ({
           </button>
         )}
       </div>
-
       {editing ? (
         <div className="space-y-3">
           <Input
@@ -125,86 +130,138 @@ const AdminDashboard = () => {
   const [loading, setLoading] = useState(true);
   const [activeCategory, setActiveCategory] = useState<string>("all");
   const [staff, setStaff] = useState<StaffMember[]>([]);
+  const [staffLoading, setStaffLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const [editingStaff, setEditingStaff] = useState<StaffMember | null>(null);
-  const [formData, setFormData] = useState({ name: "", photo: "", subject: "", email: "", phone: "" });
-  const { user } = useAuth();
+  const [formData, setFormData] = useState({
+    name: "", photo_url: "", subject: "", email: "", phone: "", role: "", is_leadership: false
+  });
   const { toast } = useToast();
   const navigate = useNavigate();
 
+  // Get admin email from localStorage
+  const admin = JSON.parse(localStorage.getItem("admin") || "{}");
+
+  // Fetch school stats from backend
   const fetchStats = async () => {
     setLoading(true);
-    
-    // Stub function - Supabase removed
-    console.warn("Supabase removed - wire up your own backend here");
-    
-    // Mock data for demonstration
-    const mockStats: SchoolStat[] = [
-      { id: "1", stat_key: "total_students", stat_value: "2,500+", stat_label: "Total Students", stat_category: "students", updated_at: new Date().toISOString() },
-      { id: "2", stat_key: "teaching_staff", stat_value: "120", stat_label: "Teaching Staff", stat_category: "staff", updated_at: new Date().toISOString() },
-      { id: "3", stat_key: "classrooms", stat_value: "45", stat_label: "Classrooms", stat_category: "facilities", updated_at: new Date().toISOString() },
-      { id: "4", stat_key: "mean_grade", stat_value: "A-", stat_label: "KCSE Mean Grade", stat_category: "academics", updated_at: new Date().toISOString() },
-    ];
-    
-    setStats(mockStats);
-    setLoading(false);
-  };
-
-  const openAddModal = () => {
-    setEditingStaff(null);
-    setFormData({ name: "", photo: "", subject: "", email: "", phone: "" });
-    setShowModal(true);
-  };
-
-  const openEditModal = (member: StaffMember) => {
-    setEditingStaff(member);
-    setFormData({ name: member.name, photo: member.photo, subject: member.subject, email: member.email, phone: member.phone });
-    setShowModal(true);
-  };
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (editingStaff) {
-      setStaff(staff.map(s => s.id === editingStaff.id ? { ...editingStaff, ...formData } : s));
-      toast({ title: "Staff updated successfully" });
-    } else {
-      setStaff([...staff, { id: Date.now().toString(), ...formData }]);
-      toast({ title: "Staff added successfully" });
+    try {
+      const res = await fetch("http://127.0.0.1:5000/api/stats/");
+      const data = await res.json();
+      setStats(data);
+    } catch (err) {
+      // If no stats yet, show empty state
+      setStats([]);
+    } finally {
+      setLoading(false);
     }
-    setShowModal(false);
   };
 
-  const handleDelete = (id: string) => {
-    if (confirm("Are you sure you want to delete this staff member?")) {
-      setStaff(staff.filter(s => s.id !== id));
-      toast({ title: "Staff deleted successfully" });
+  // Fetch staff from real backend
+  const fetchStaff = async () => {
+    setStaffLoading(true);
+    try {
+      const data = await getStaff();
+      setStaff(data);
+    } catch (err) {
+      toast({ title: "Error", description: "Could not load staff", variant: "destructive" });
+    } finally {
+      setStaffLoading(false);
     }
   };
 
   useEffect(() => {
     fetchStats();
+    fetchStaff();
   }, []);
 
+  // Save updated stat value to backend
   const handleSave = async (id: string, value: string) => {
-    // Stub function - Supabase removed
-    console.warn("Supabase removed - wire up your own backend here");
-    
-    toast({ title: "Mock Save", description: "Supabase removed. Wire up your backend to persist changes." });
-    setStats((prev) => prev.map((s) => s.id === id ? { ...s, stat_value: value, updated_at: new Date().toISOString() } : s));
+    try {
+      const token = localStorage.getItem("access_token");
+      await fetch(`http://127.0.0.1:5000/api/stats/${id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`
+        },
+        body: JSON.stringify({ stat_value: value })
+      });
+      // Update local state immediately for smooth UX
+      setStats((prev) =>
+        prev.map((s) => s.id === id ? { ...s, stat_value: value, updated_at: new Date().toISOString() } : s)
+      );
+      toast({ title: "Stat updated successfully" });
+    } catch (err) {
+      toast({ title: "Error", description: "Could not update stat", variant: "destructive" });
+    }
   };
 
-  const handleLogout = async () => {
-    // Stub function - Supabase removed
-    console.warn("Supabase removed - wire up your own backend here");
-    
+  const openAddModal = () => {
+    setEditingStaff(null);
+    setFormData({ name: "", photo_url: "", subject: "", email: "", phone: "", role: "", is_leadership: false });
+    setShowModal(true);
+  };
+
+  const openEditModal = (member: StaffMember) => {
+    setEditingStaff(member);
+    setFormData({
+      name: member.name,
+      photo_url: member.photo_url,
+      subject: member.subject,
+      email: member.email,
+      phone: member.phone,
+      role: member.role,
+      is_leadership: member.is_leadership
+    });
+    setShowModal(true);
+  };
+
+  // Add or update staff using real backend
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    try {
+      if (editingStaff) {
+        // Update existing staff member
+        await updateStaff(Number(editingStaff.id), formData);
+        toast({ title: "Staff updated successfully" });
+      } else {
+        // Create new staff member
+        await createStaff(formData);
+        toast({ title: "Staff added successfully" });
+      }
+      // Refresh staff list from backend
+      fetchStaff();
+      setShowModal(false);
+    } catch (err) {
+      toast({ title: "Error", description: "Could not save staff", variant: "destructive" });
+    }
+  };
+
+  // Delete staff member from backend
+  const handleDelete = async (id: string) => {
+    if (confirm("Are you sure you want to delete this staff member?")) {
+      try {
+        await deleteStaff(Number(id));
+        toast({ title: "Staff deleted successfully" });
+        // Refresh staff list
+        fetchStaff();
+      } catch (err) {
+        toast({ title: "Error", description: "Could not delete staff", variant: "destructive" });
+      }
+    }
+  };
+
+  // Logout - clear localStorage and redirect
+  const handleLogout = () => {
+    localStorage.removeItem("access_token");
+    localStorage.removeItem("admin");
     toast({ title: "Logged out successfully" });
     navigate("/admin/login");
   };
 
   const categories = ["all", ...Object.keys(categoryConfig)];
   const filteredStats = activeCategory === "all" ? stats : stats.filter((s) => s.stat_category === activeCategory);
-
-  // Group by category for display
   const grouped = filteredStats.reduce<Record<string, SchoolStat[]>>((acc, stat) => {
     const cat = stat.stat_category;
     if (!acc[cat]) acc[cat] = [];
@@ -229,9 +286,10 @@ const AdminDashboard = () => {
             </div>
           </div>
           <div className="flex items-center gap-2">
+            {/* Show logged in admin email */}
             <div className="hidden md:flex items-center gap-2 text-xs text-muted-foreground bg-muted px-3 py-1.5 rounded-full">
               <Shield className="w-3 h-3 text-primary" />
-              <span>{user?.email || "No user"}</span>
+              <span>{admin?.email || "Admin"}</span>
             </div>
             <Button variant="outline" size="sm" onClick={() => navigate("/")} className="hidden md:flex gap-1.5 text-xs">
               <LayoutDashboard className="w-3.5 h-3.5" /> View Site
@@ -276,10 +334,16 @@ const AdminDashboard = () => {
           })}
         </div>
 
-        {/* Stats */}
+        {/* Stats grid */}
         {loading ? (
           <div className="flex items-center justify-center py-20">
             <RefreshCw className="w-8 h-8 text-primary animate-spin" />
+          </div>
+        ) : stats.length === 0 ? (
+          // Show message if no stats in database yet
+          <div className="bg-card border border-border rounded-xl p-12 text-center mb-16">
+            <FlaskConical className="w-12 h-12 text-muted-foreground mx-auto mb-3" />
+            <p className="text-muted-foreground">No stats yet. Add them via the API or seed the database.</p>
           </div>
         ) : (
           <div className="space-y-10">
@@ -318,7 +382,11 @@ const AdminDashboard = () => {
             </Button>
           </div>
 
-          {staff.length === 0 ? (
+          {staffLoading ? (
+            <div className="flex items-center justify-center py-20">
+              <RefreshCw className="w-8 h-8 text-primary animate-spin" />
+            </div>
+          ) : staff.length === 0 ? (
             <div className="bg-card border border-border rounded-xl p-12 text-center">
               <Users className="w-12 h-12 text-muted-foreground mx-auto mb-3" />
               <p className="text-muted-foreground">No staff members yet. Click "Add Staff" to get started.</p>
@@ -333,7 +401,7 @@ const AdminDashboard = () => {
                   className="bg-card border border-border rounded-xl overflow-hidden hover:shadow-lg transition-shadow"
                 >
                   <div className="aspect-square bg-muted relative">
-                    <img src={member.photo} alt={member.name} className="w-full h-full object-cover" />
+                    <img src={member.photo_url} alt={member.name} className="w-full h-full object-cover" />
                   </div>
                   <div className="p-5">
                     <h3 className="font-display text-lg font-bold text-foreground mb-1">{member.name}</h3>
@@ -364,7 +432,7 @@ const AdminDashboard = () => {
         </motion.div>
       </main>
 
-      {/* Modal */}
+      {/* Add/Edit Staff Modal */}
       {showModal && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4" onClick={() => setShowModal(false)}>
           <motion.div
@@ -394,25 +462,30 @@ const AdminDashboard = () => {
               <div>
                 <label className="block text-sm font-semibold text-foreground mb-1.5">Photo URL</label>
                 <Input
-                  required
-                  value={formData.photo}
-                  onChange={(e) => setFormData({ ...formData, photo: e.target.value })}
+                  value={formData.photo_url}
+                  onChange={(e) => setFormData({ ...formData, photo_url: e.target.value })}
                   placeholder="https://res.cloudinary.com/..."
                 />
               </div>
               <div>
                 <label className="block text-sm font-semibold text-foreground mb-1.5">Subject/Department</label>
                 <Input
-                  required
                   value={formData.subject}
                   onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
                   placeholder="Mathematics"
                 />
               </div>
               <div>
+                <label className="block text-sm font-semibold text-foreground mb-1.5">Role</label>
+                <Input
+                  value={formData.role}
+                  onChange={(e) => setFormData({ ...formData, role: e.target.value })}
+                  placeholder="Head of Department"
+                />
+              </div>
+              <div>
                 <label className="block text-sm font-semibold text-foreground mb-1.5">Email</label>
                 <Input
-                  required
                   type="email"
                   value={formData.email}
                   onChange={(e) => setFormData({ ...formData, email: e.target.value })}
@@ -422,11 +495,22 @@ const AdminDashboard = () => {
               <div>
                 <label className="block text-sm font-semibold text-foreground mb-1.5">Phone</label>
                 <Input
-                  required
                   value={formData.phone}
                   onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
                   placeholder="+254 700 000 000"
                 />
+              </div>
+              <div className="flex items-center gap-2">
+                <input
+                  type="checkbox"
+                  id="is_leadership"
+                  checked={formData.is_leadership}
+                  onChange={(e) => setFormData({ ...formData, is_leadership: e.target.checked })}
+                  className="w-4 h-4"
+                />
+                <label htmlFor="is_leadership" className="text-sm font-semibold text-foreground">
+                  Leadership/Management member
+                </label>
               </div>
               <div className="flex gap-3 pt-2">
                 <Button type="submit" className="flex-1 gap-2">
