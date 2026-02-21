@@ -22,8 +22,7 @@ def create_app():
     mail.init_app(app)
     bcrypt.init_app(app)
 
-    # Allow requests from React frontend
-   # Allow requests from both common Vite ports
+    # Allow requests from both common Vite ports
     CORS(app, origins=["http://localhost:5173", "http://localhost:8080"])
 
     # Import all models so SQLAlchemy knows about them
@@ -43,6 +42,7 @@ def create_app():
     from app.routes.kcse_results import kcse_bp
     from app.routes.testimonials import testimonials_bp
     from app.routes.contact import contact_bp
+    from app.routes.stats import stats_bp  # Stats blueprint
 
     app.register_blueprint(auth_bp, url_prefix="/api/auth")
     app.register_blueprint(staff_bp, url_prefix="/api/staff")
@@ -53,5 +53,6 @@ def create_app():
     app.register_blueprint(kcse_bp, url_prefix="/api/kcse")
     app.register_blueprint(testimonials_bp, url_prefix="/api/testimonials")
     app.register_blueprint(contact_bp, url_prefix="/api/contact")
+    app.register_blueprint(stats_bp, url_prefix="/api/stats")  # Register stats
 
     return app
