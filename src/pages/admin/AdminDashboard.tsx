@@ -11,6 +11,7 @@ import { useToast } from "@/hooks/use-toast";
 import {
   getStaff, createStaff, updateStaff, deleteStaff
 } from "@/services/api";
+import schoolBadge from "@/assets/school-badge.jpeg";
 
 // SchoolStat interface matching our backend model
 interface SchoolStat {
@@ -271,23 +272,21 @@ const AdminDashboard = () => {
   return (
     <div className="min-h-screen bg-background">
       {/* Top bar */}
-      <header className="bg-card border-b border-border sticky top-0 z-50 shadow-sm">
+      <header className="bg-primary border-b border-primary sticky top-0 z-50 shadow-sm">
         <div className="container mx-auto px-4 py-3 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center border-2 border-primary">
-              <Shield className="w-4 h-4 text-primary" />
-            </div>
+            <img src={schoolBadge} alt="Kakamega School Badge" className="w-10 h-10 rounded-full object-cover border-2 border-gold/30" />
             <div>
-              <h1 className="font-display font-bold text-foreground leading-tight text-sm md:text-base">
+              <h1 className="font-display font-bold text-primary-foreground leading-tight text-sm md:text-base">
                 Admin Dashboard
               </h1>
-              <p className="text-[10px] text-muted-foreground">Kakamega School • Administration Portal</p>
+              <p className="text-[10px] text-gold font-semibold">Kakamega School • Administration Portal</p>
             </div>
           </div>
           <div className="flex items-center gap-2">
-            <div className="hidden md:flex items-center gap-2 text-xs text-muted-foreground bg-muted px-3 py-1.5 rounded-full">
-              <Shield className="w-3 h-3 text-primary" />
-              <span>{admin?.email || "Admin"}</span>
+            <div className="hidden md:flex items-center gap-2 text-xs text-gold font-semibold bg-primary-foreground/10 px-3 py-1.5 rounded-full">
+              <Shield className="w-3 h-3 text-gold" />
+              <span>{admin?.email || "admin@kakamega.ac.ke"}</span>
             </div>
             <Button variant="outline" size="sm" onClick={() => navigate("/")} className="hidden md:flex gap-1.5 text-xs">
               <LayoutDashboard className="w-3.5 h-3.5" /> View Site
