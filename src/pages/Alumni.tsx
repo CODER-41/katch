@@ -1,10 +1,21 @@
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
-import { ArrowRight, GraduationCap, Heart, Users } from "lucide-react";
+import { ArrowRight, GraduationCap, Heart, Users, RefreshCw } from "lucide-react";
 import Layout from "@/components/layout/Layout";
-import PageHero from "@/components/common/PageHero";
+import { getAlumni } from "@/services/api"; // Import real API function
 
-const notableAlumni = [
+// Interface matching Alumni model from Flask backend
+interface AlumniMember {
+  id: number;
+  name: string;
+  achievement: string;
+  description: string;
+  created_at: string;
+}
+
+// Hardcoded notable alumni - these always show
+const hardcodedAlumni = [
   { name: "Hon. Moody Awori", achievement: "Former Vice President of Kenya", desc: "Served as Kenya's 9th Vice President (2003-2008) and held multiple ministerial positions. A distinguished lawyer and statesman, his leadership exemplified the discipline and excellence instilled at Kakamega School." },
   { name: "Hon. Najib Balala", achievement: "Former Cabinet Secretary for Tourism & Wildlife", desc: "Former Cabinet Secretary for Tourism and Wildlife, instrumental in transforming Kenya's tourism sector. His vision and dedication reflect the all-round education that shaped him at Katch." },
   { name: "Hon. Kenneth Marende", achievement: "9th Speaker of National Assembly", desc: "Served as Speaker of Kenya's National Assembly (2008-2013), presiding over critical constitutional reforms. His impartiality and legal acumen trace back to the values learned at Katch." },
@@ -12,18 +23,42 @@ const notableAlumni = [
   { name: "Hon. Amos Wako", achievement: "Former Attorney General of Kenya", desc: "Served as Kenya's Attorney General for 20 years (1991-2011), one of the longest-serving in the Commonwealth. His legal expertise and integrity reflect the academic rigor of his alma mater." },
 ];
 
+// Ways to give back - static content
 const waysToGiveBack = [
   { icon: GraduationCap, title: "Scholarships", desc: "Sponsor a student's education and help shape the future of a young Green Commando." },
   { icon: Heart, title: "Infrastructure", desc: "Contribute to school facilities — libraries, labs, dormitories, and sports complexes." },
   { icon: Users, title: "Mentorship", desc: "Share your professional experience and guide current students in career choices." },
 ];
 
+// Animation variants for fade up effect
 const fadeUp = {
   hidden: { opacity: 0, y: 30 },
   visible: (i: number) => ({ opacity: 1, y: 0, transition: { delay: i * 0.1, duration: 0.5 } }),
 };
 
 const Alumni = () => {
+  // State for alumni added via admin dashboard
+  const [backendAlumni, setBackendAlumni] = useState<AlumniMember[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  // Fetch alumni added via admin dashboard
+  const fetchAlumni = async () => {
+    setLoading(true);
+    try {
+      const data = await getAlumni();
+      setBackendAlumni(data);
+    } catch (err) {
+      console.error("Could not load alumni from backend:", err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Fetch alumni when page loads
+  useEffect(() => {
+    fetchAlumni();
+  }, []);
+
   return (
     <Layout>
       {/* Custom Hero for Alumni */}
@@ -46,44 +81,93 @@ const Alumni = () => {
         </div>
       </section>
 
-      {/* Notable Alumni */}
+      {/* Notable Alumni Section */}
       <section className="section-padding bg-background">
         <div className="container mx-auto max-w-6xl">
           <div className="flex justify-center mb-8">
-            <img 
-              src="https://res.cloudinary.com/da0mkvthw/image/upload/v1771530999/kakamega_school_alumni_association_lbuqas.png" 
-              alt="Kakamega School Alumni Association" 
+            <img
+              src="https://res.cloudinary.com/da0mkvthw/image/upload/v1771530999/kakamega_school_alumni_association_lbuqas.png"
+              alt="Kakamega School Alumni Association"
               className="h-64 w-auto object-contain"
             />
           </div>
           <div className="text-center mb-12">
-            <h2 className="font-display text-3xl md:text-4xl font-bold text-foreground mb-4">The School We Know: A Legacy of Grit and Glory</h2>
+            <h2 className="font-display text-3xl md:text-4xl font-bold text-foreground mb-4">
+              The School We Know: A Legacy of Grit and Glory
+            </h2>
             <p className="text-muted-foreground max-w-3xl mx-auto">
-              In the "School We Know," leadership isn't just taught in a hall; it's forged on the pitch and in the scrum. Kakamega School has a unique identity where the line between a school Academics and a professional sports entity blurs, creating a culture of excellence that stays with its alumni for life.
+              In the "School We Know," leadership isn't just taught in a hall; it's forged on the pitch and in the scrum. Kakamega School has a unique identity where the line between academics and professional sports blurs, creating a culture of excellence that stays with its alumni for life.
             </p>
           </div>
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {notableAlumni.map((person, i) => (
-              <motion.div key={person.name} variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }} custom={i} className="bg-card rounded-xl p-6 border border-border">
-                <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center mb-4">
-                  <GraduationCap className="w-8 h-8 text-primary" />
-                </div>
-                <h3 className="font-display text-lg font-semibold text-foreground">{person.name}</h3>
-                <p className="text-sm text-primary font-medium mb-3">{person.achievement}</p>
-                <p className="text-sm text-muted-foreground leading-relaxed">{person.desc}</p>
-              </motion.div>
-            ))}
-          </div>
+
+          {/* Loading spinner while fetching backend alumni */}
+          {loading ? (
+            <div className="flex items-center justify-center py-10">
+              <RefreshCw className="w-8 h-8 text-primary animate-spin" />
+            </div>
+          ) : (
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {/* Backend alumni appear first - newest additions show at top */}
+              {backendAlumni.map((person, i) => (
+                <motion.div
+                  key={person.id}
+                  variants={fadeUp}
+                  initial="hidden"
+                  whileInView="visible"
+                  viewport={{ once: true }}
+                  custom={i}
+                  className="bg-card rounded-xl p-6 border border-border"
+                >
+                  <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center mb-4">
+                    <GraduationCap className="w-8 h-8 text-primary" />
+                  </div>
+                  <h3 className="font-display text-lg font-semibold text-foreground">{person.name}</h3>
+                  <p className="text-sm text-primary font-medium mb-3">{person.achievement}</p>
+                  <p className="text-sm text-muted-foreground leading-relaxed">{person.description}</p>
+                </motion.div>
+              ))}
+
+              {/* Hardcoded notable alumni always show below backend ones */}
+              {hardcodedAlumni.map((person, i) => (
+                <motion.div
+                  key={person.name}
+                  variants={fadeUp}
+                  initial="hidden"
+                  whileInView="visible"
+                  viewport={{ once: true }}
+                  custom={i + backendAlumni.length}
+                  className="bg-card rounded-xl p-6 border border-border"
+                >
+                  <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center mb-4">
+                    <GraduationCap className="w-8 h-8 text-primary" />
+                  </div>
+                  <h3 className="font-display text-lg font-semibold text-foreground">{person.name}</h3>
+                  <p className="text-sm text-primary font-medium mb-3">{person.achievement}</p>
+                  <p className="text-sm text-muted-foreground leading-relaxed">{person.desc}</p>
+                </motion.div>
+              ))}
+            </div>
+          )}
         </div>
       </section>
 
-      {/* Give Back */}
+      {/* Ways to Give Back - static content */}
       <section className="section-padding bg-section-alt">
         <div className="container mx-auto max-w-4xl">
-          <h2 className="font-display text-3xl md:text-4xl font-bold text-foreground mb-10 text-center">Ways to Give Back</h2>
+          <h2 className="font-display text-3xl md:text-4xl font-bold text-foreground mb-10 text-center">
+            Ways to Give Back
+          </h2>
           <div className="grid md:grid-cols-3 gap-6">
             {waysToGiveBack.map((item, i) => (
-              <motion.div key={item.title} variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }} custom={i} className="bg-card rounded-xl p-6 border border-border text-center hover:shadow-md transition-shadow">
+              <motion.div
+                key={item.title}
+                variants={fadeUp}
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true }}
+                custom={i}
+                className="bg-card rounded-xl p-6 border border-border text-center hover:shadow-md transition-shadow"
+              >
                 <item.icon className="w-10 h-10 text-gold mx-auto mb-4" />
                 <h3 className="font-display text-lg font-semibold text-foreground mb-2">{item.title}</h3>
                 <p className="text-sm text-muted-foreground">{item.desc}</p>
@@ -93,12 +177,17 @@ const Alumni = () => {
         </div>
       </section>
 
-      {/* CTA */}
+      {/* CTA Section */}
       <section className="section-padding bg-primary text-primary-foreground text-center">
         <div className="container mx-auto max-w-2xl">
           <h2 className="font-display text-3xl font-bold mb-4">Stay Connected</h2>
-          <p className="opacity-80 mb-6">Join the Kakamega School Alumni Association and stay connected with your fellow Katch alumni.</p>
-          <Link to="/contact" className="inline-flex items-center gap-2 bg-gold text-gold-foreground font-semibold px-8 py-3.5 rounded-lg hover:opacity-90 transition-opacity">
+          <p className="opacity-80 mb-6">
+            Join the Kakamega School Alumni Association and stay connected with your fellow Katch alumni.
+          </p>
+          <Link
+            to="/contact"
+            className="inline-flex items-center gap-2 bg-gold text-gold-foreground font-semibold px-8 py-3.5 rounded-lg hover:opacity-90 transition-opacity"
+          >
             Get in Touch <ArrowRight className="w-4 h-4" />
           </Link>
         </div>

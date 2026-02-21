@@ -22,6 +22,14 @@ export const loginAdmin = (email: string, password: string) =>
 export const getStaff = () =>
   fetch(`${API_URL}/staff/`, { headers: getHeaders() }).then(res => res.json())
 
+/*************  ✨ Windsurf Command ⭐  *************/
+/**
+ * Create a new staff member
+ *
+ * @param {object} data - StaffMember object (name, photo_url, subject, email, phone, role, is_leadership)
+ * @returns {Promise} - Resolves with the newly created staff member object
+ */
+/*******  c0447c34-dc6a-462d-8536-8b62958f03b9  *******/
 export const createStaff = (data: object) =>
   fetch(`${API_URL}/staff/`, {
     method: 'POST',
@@ -114,6 +122,23 @@ export const createTestimonial = (data: object) =>
 
 export const deleteTestimonial = (id: number) =>
   fetch(`${API_URL}/testimonials/${id}`, {
+    method: 'DELETE',
+    headers: getHeaders()
+  }).then(res => res.json())
+
+// ALUMNI
+export const getAlumni = () =>
+  fetch(`${API_URL}/alumni/`, { headers: getHeaders() }).then(res => res.json())
+
+export const createAlumni = (data: object) =>
+  fetch(`${API_URL}/alumni/`, {
+    method: 'POST',
+    headers: getHeaders(),
+    body: JSON.stringify(data)
+  }).then(res => res.json())
+
+export const deleteAlumni = (id: number) =>
+  fetch(`${API_URL}/alumni/${id}`, {
     method: 'DELETE',
     headers: getHeaders()
   }).then(res => res.json())
