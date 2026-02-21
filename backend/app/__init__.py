@@ -23,7 +23,8 @@ def create_app():
     bcrypt.init_app(app)
 
     # Allow requests from React frontend
-    CORS(app, origins=["http://localhost:5173"])
+   # Allow requests from both common Vite ports
+    CORS(app, origins=["http://localhost:5173", "http://localhost:8080"])
 
     # Import all models so SQLAlchemy knows about them
     from app import models
