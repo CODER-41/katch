@@ -449,7 +449,7 @@ const AdminDashboard = () => {
                     </div>
                     <div className="flex gap-2">
                       <Button size="sm" variant="outline" onClick={() => { setEditingStaff(member); setStaffForm({ name: member.name, photo_url: member.photo_url, subject: member.subject, email: member.email, phone: member.phone, role: member.role, is_leadership: member.is_leadership }); setShowStaffModal(true); }} className="flex-1 gap-1.5"><Edit3 className="w-3 h-3" /> Edit</Button>
-                      <Button size="sm" variant="destructive" onClick={() => handleDeleteStaff(member.id)} className="gap-1.5"><Trash2 className="w-3 h-3" /> Delete</Button>
+                      <Button size="sm" onClick={() => handleDeleteStaff(member.id)} className="gap-1.5 bg-primary hover:bg-primary/90 text-primary-foreground"><Trash2 className="w-3 h-3" /> Delete</Button>
                     </div>
                   </div>
                 </motion.div>
@@ -470,7 +470,7 @@ const AdminDashboard = () => {
                   <span className="text-xs font-semibold text-primary bg-primary/10 px-2 py-0.5 rounded-full">{item.category}</span>
                   <h3 className="font-display text-base font-bold text-foreground mt-3 mb-2">{item.title}</h3>
                   <p className="text-xs text-muted-foreground mb-4 line-clamp-2">{item.excerpt}</p>
-                  <Button size="sm" variant="destructive" onClick={() => handleDeleteNews(item.id)} className="gap-1.5 w-full"><Trash2 className="w-3 h-3" /> Delete</Button>
+                  <Button size="sm" onClick={() => handleDeleteNews(item.id)} className="gap-1.5 w-full bg-primary hover:bg-primary/90 text-primary-foreground"><Trash2 className="w-3 h-3" /> Delete</Button>
                 </div>
               ))}
             </div>
@@ -489,7 +489,7 @@ const AdminDashboard = () => {
                   <div className="bg-primary/10 text-primary font-bold text-xs px-3 py-1.5 rounded-lg inline-block mb-3">{event.date}</div>
                   <h3 className="font-display text-base font-bold text-foreground mb-2">{event.title}</h3>
                   <p className="text-xs text-muted-foreground mb-4 line-clamp-2">{event.description}</p>
-                  <Button size="sm" variant="destructive" onClick={() => handleDeleteEvent(event.id)} className="gap-1.5 w-full"><Trash2 className="w-3 h-3" /> Delete</Button>
+                  <Button size="sm" onClick={() => handleDeleteEvent(event.id)} className="gap-1.5 w-full bg-primary hover:bg-primary/90 text-primary-foreground"><Trash2 className="w-3 h-3" /> Delete</Button>
                 </div>
               ))}
             </div>
@@ -509,7 +509,7 @@ const AdminDashboard = () => {
                   <div className="p-3">
                     <p className="font-semibold text-sm text-foreground truncate">{image.title}</p>
                     <p className="text-xs text-muted-foreground mb-3">{image.category}</p>
-                    <Button size="sm" variant="destructive" onClick={() => handleDeleteGallery(image.id)} className="gap-1.5 w-full"><Trash2 className="w-3 h-3" /> Delete</Button>
+                    <Button size="sm" onClick={() => handleDeleteGallery(image.id)} className="gap-1.5 w-full bg-primary hover:bg-primary/90 text-primary-foreground"><Trash2 className="w-3 h-3" /> Delete</Button>
                   </div>
                 </div>
               ))}
@@ -529,7 +529,7 @@ const AdminDashboard = () => {
                   <p className="text-sm text-foreground italic mb-4 line-clamp-3">"{t.quote}"</p>
                   <p className="font-bold text-sm text-foreground">{t.student_name}</p>
                   <p className="text-xs text-muted-foreground mb-4">{t.year}</p>
-                  <Button size="sm" variant="destructive" onClick={() => handleDeleteTestimonial(t.id)} className="gap-1.5 w-full"><Trash2 className="w-3 h-3" /> Delete</Button>
+                  <Button size="sm" onClick={() => handleDeleteTestimonial(t.id)} className="gap-1.5 w-full bg-primary hover:bg-primary/90 text-primary-foreground"><Trash2 className="w-3 h-3" /> Delete</Button>
                 </div>
               ))}
             </div>
