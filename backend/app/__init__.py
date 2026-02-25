@@ -22,8 +22,12 @@ def create_app():
     mail.init_app(app)
     bcrypt.init_app(app)
 
-    # Allow requests from both common Vite ports
-    CORS(app, origins=["http://localhost:5173", "http://localhost:8080", "https://katch-jade.vercel.app" ])
+    # Configure CORS with proper settings
+    CORS(app, 
+         resources={r"/api/*": {"origins": ["http://localhost:5173", "http://localhost:8080", "https://katch-jade.vercel.app"]}},
+         supports_credentials=True,
+         allow_headers=["Content-Type", "Authorization"],
+         methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"])
 
     # Import all models so SQLAlchemy knows about them
     from app import models
