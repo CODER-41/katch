@@ -1,6 +1,5 @@
-// Base URL for the Flask backend API
-const API_URL = 'http://127.0.0.1:5000/api'
-
+// Base URL for the Flask backend AP
+const API_URL = 'https://kakamega-school-backend.onrender.com/api'
 // Helper function to get the JWT token from localStorage
 const getToken = () => localStorage.getItem('access_token')
 
