@@ -4,7 +4,8 @@ import { motion } from "framer-motion";
 import {
   Users, GraduationCap, Building2, BookOpen, Trophy, FlaskConical,
   LogOut, Save, Edit3, X, Check, LayoutDashboard, RefreshCw, Shield,
-  Plus, Mail, Phone, Trash2, Newspaper, Calendar, Image, MessageSquare
+  Plus, Mail, Phone, Trash2, Newspaper, Calendar, Image, MessageSquare,
+  Inbox, CheckCheck, Clock
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -14,7 +15,8 @@ import {
   getNews, createNews, deleteNews,
   getEvents, createEvent, deleteEvent,
   getGallery, createGalleryImage, deleteGalleryImage,
-  getTestimonials, createTestimonial, deleteTestimonial
+  getTestimonials, createTestimonial, deleteTestimonial,
+  getContactSubmissions, markSubmissionRead, deleteSubmission
 } from "@/services/api";
 import schoolBadge from "@/assets/school-badge.jpeg";
 
@@ -69,6 +71,17 @@ interface Testimonial {
   student_name: string;
   year: string;
   quote: string;
+  created_at: string;
+}
+
+interface ContactSubmission {
+  id: number;
+  name: string;
+  email: string;
+  phone: string;
+  subject: string;
+  message: string;
+  is_read: boolean;
   created_at: string;
 }
 
@@ -143,22 +156,29 @@ const StatCard = ({ stat, onSave }: { stat: SchoolStat; onSave: (id: string, val
 
 // ─── Section Header component ─────────────────────────────────────────────────
 
-const SectionHeader = ({ icon: Icon, title, desc, onAdd, addLabel }: {
-  icon: React.ElementType; title: string; desc: string; onAdd: () => void; addLabel: string;
+const SectionHeader = ({ icon: Icon, title, desc, onAdd, addLabel, badge }: {
+  icon: React.ElementType; title: string; desc: string; onAdd?: () => void; addLabel?: string; badge?: number;
 }) => (
   <div className="flex items-center justify-between mb-6">
     <div className="flex items-center gap-3">
-      <div className="p-2 rounded-lg bg-primary/10">
+      <div className="p-2 rounded-lg bg-primary/10 relative">
         <Icon className="w-5 h-5 text-primary" />
+        {badge && badge > 0 ? (
+          <span className="absolute -top-1.5 -right-1.5 bg-red-500 text-white text-[10px] font-bold rounded-full w-4 h-4 flex items-center justify-center">
+            {badge > 9 ? "9+" : badge}
+          </span>
+        ) : null}
       </div>
       <div>
         <h2 className="font-display text-2xl md:text-3xl font-bold text-foreground">{title}</h2>
         <p className="text-muted-foreground mt-0.5 text-sm">{desc}</p>
       </div>
     </div>
-    <Button onClick={onAdd} className="gap-2">
-      <Plus className="w-4 h-4" /> {addLabel}
-    </Button>
+    {onAdd && addLabel && (
+      <Button onClick={onAdd} className="gap-2">
+        <Plus className="w-4 h-4" /> {addLabel}
+      </Button>
+    )}
   </div>
 );
 
@@ -205,6 +225,11 @@ const AdminDashboard = () => {
   const [showTestimonialModal, setShowTestimonialModal] = useState(false);
   const [testimonialForm, setTestimonialForm] = useState({ student_name: "", year: "", quote: "" });
 
+  // ── Contact Submissions state ──
+  const [submissions, setSubmissions] = useState<ContactSubmission[]>([]);
+  const [submissionsLoading, setSubmissionsLoading] = useState(true);
+  const [expandedSubmission, setExpandedSubmission] = useState<number | null>(null);
+
   // ── Fetch all data on mount ──
   useEffect(() => {
     fetchStats();
@@ -213,6 +238,7 @@ const AdminDashboard = () => {
     fetchEvents();
     fetchGallery();
     fetchTestimonials();
+    fetchSubmissions();
   }, []);
 
   const fetchStats = async () => {
@@ -256,6 +282,13 @@ const AdminDashboard = () => {
     try { setTestimonials(await getTestimonials()); }
     catch { toast({ title: "Error", description: "Could not load testimonials", variant: "destructive" }); }
     finally { setTestimonialsLoading(false); }
+  };
+
+  const fetchSubmissions = async () => {
+    setSubmissionsLoading(true);
+    try { setSubmissions(await getContactSubmissions()); }
+    catch { toast({ title: "Error", description: "Could not load messages", variant: "destructive" }); }
+    finally { setSubmissionsLoading(false); }
   };
 
   // ── Stats save ──
@@ -340,6 +373,27 @@ const AdminDashboard = () => {
     catch { toast({ title: "Error", description: "Could not delete testimonial", variant: "destructive" }); }
   };
 
+  // ── Contact Submissions handlers ──
+  const handleMarkRead = async (id: number) => {
+    try {
+      await markSubmissionRead(id);
+      setSubmissions(prev => prev.map(s => s.id === id ? { ...s, is_read: true } : s));
+      toast({ title: "Message marked as read" });
+    } catch { toast({ title: "Error", description: "Could not mark as read", variant: "destructive" }); }
+  };
+
+  const handleDeleteSubmission = async (id: number) => {
+    if (!confirm("Delete this message?")) return;
+    try {
+      await deleteSubmission(id);
+      setSubmissions(prev => prev.filter(s => s.id !== id));
+      toast({ title: "Message deleted" });
+    } catch { toast({ title: "Error", description: "Could not delete message", variant: "destructive" }); }
+  };
+
+  // Count unread messages for badge
+  const unreadCount = submissions.filter(s => !s.is_read).length;
+
   // ── Logout ──
   const handleLogout = () => {
     localStorage.removeItem("access_token");
@@ -369,6 +423,13 @@ const AdminDashboard = () => {
             </div>
           </div>
           <div className="flex items-center gap-2">
+            {/* Unread messages badge in header */}
+            {unreadCount > 0 && (
+              <div className="flex items-center gap-1.5 text-xs font-semibold bg-red-500 text-white px-3 py-1.5 rounded-full">
+                <Inbox className="w-3 h-3" />
+                {unreadCount} unread
+              </div>
+            )}
             <div className="hidden md:flex items-center gap-2 text-xs text-gold font-semibold bg-primary-foreground/10 px-3 py-1.5 rounded-full">
               <Shield className="w-3 h-3 text-gold" />
               <span>{admin?.email || "admin@kakamega.ac.ke"}</span>
@@ -384,6 +445,119 @@ const AdminDashboard = () => {
       </header>
 
       <main className="container mx-auto px-4 py-8 space-y-20">
+
+        {/* ── Contact Submissions Inbox ── */}
+        <section>
+          <SectionHeader
+            icon={Inbox}
+            title="Messages Inbox"
+            desc="Contact form submissions from parents and visitors"
+            badge={unreadCount}
+          />
+          {submissionsLoading ? (
+            <div className="flex items-center justify-center py-10"><RefreshCw className="w-8 h-8 text-primary animate-spin" /></div>
+          ) : submissions.length === 0 ? (
+            <div className="bg-card border border-border rounded-xl p-12 text-center">
+              <Inbox className="w-12 h-12 text-muted-foreground mx-auto mb-3" />
+              <p className="text-muted-foreground">No messages yet. When parents contact the school, messages will appear here.</p>
+            </div>
+          ) : (
+            <div className="space-y-3">
+              {submissions.map((submission) => (
+                <motion.div
+                  key={submission.id}
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className={`bg-card border rounded-xl overflow-hidden transition-all ${
+                    submission.is_read ? "border-border" : "border-primary/40 shadow-md shadow-primary/10"
+                  }`}
+                >
+                  {/* Message header - always visible */}
+                  <div
+                    className="flex items-center justify-between p-4 cursor-pointer hover:bg-muted/50 transition-colors"
+                    onClick={() => {
+                      setExpandedSubmission(expandedSubmission === submission.id ? null : submission.id);
+                      if (!submission.is_read) handleMarkRead(submission.id);
+                    }}
+                  >
+                    <div className="flex items-center gap-3 min-w-0">
+                      {/* Unread indicator dot */}
+                      <div className={`w-2.5 h-2.5 rounded-full flex-shrink-0 ${submission.is_read ? "bg-muted" : "bg-primary"}`} />
+                      <div className="min-w-0">
+                        <div className="flex items-center gap-2 flex-wrap">
+                          <p className={`text-sm font-semibold text-foreground ${!submission.is_read ? "font-bold" : ""}`}>
+                            {submission.name}
+                          </p>
+                          {submission.subject && (
+                            <span className="text-xs text-primary bg-primary/10 px-2 py-0.5 rounded-full">
+                              {submission.subject}
+                            </span>
+                          )}
+                          {!submission.is_read && (
+                            <span className="text-xs text-white bg-primary px-2 py-0.5 rounded-full font-semibold">
+                              New
+                            </span>
+                          )}
+                        </div>
+                        <p className="text-xs text-muted-foreground truncate">{submission.email}</p>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-2 flex-shrink-0 ml-2">
+                      <div className="flex items-center gap-1 text-xs text-muted-foreground">
+                        <Clock className="w-3 h-3" />
+                        {new Date(submission.created_at).toLocaleDateString("en-KE", { day: "numeric", month: "short", year: "numeric" })}
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Expanded message body */}
+                  {expandedSubmission === submission.id && (
+                    <div className="px-4 pb-4 border-t border-border">
+                      <div className="pt-4 space-y-3">
+                        {/* Contact details */}
+                        <div className="grid sm:grid-cols-2 gap-3">
+                          <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                            <Mail className="w-4 h-4 text-primary" />
+                            <a href={`mailto:${submission.email}`} className="hover:text-primary transition-colors">
+                              {submission.email}
+                            </a>
+                          </div>
+                          {submission.phone && (
+                            <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                              <Phone className="w-4 h-4 text-primary" />
+                              <span>{submission.phone}</span>
+                            </div>
+                          )}
+                        </div>
+                        {/* Message body */}
+                        <div className="bg-muted/50 rounded-lg p-4">
+                          <p className="text-sm text-foreground leading-relaxed whitespace-pre-wrap">{submission.message}</p>
+                        </div>
+                        {/* Action buttons */}
+                        <div className="flex gap-2 pt-1">
+                          <a
+                            href={`mailto:${submission.email}?subject=Re: ${submission.subject || "Your enquiry to Kakamega School"}`}
+                            className="flex-1 inline-flex items-center justify-center gap-2 bg-primary text-primary-foreground text-sm font-semibold px-4 py-2 rounded-lg hover:bg-primary/90 transition-colors"
+                          >
+                            <Mail className="w-4 h-4" /> Reply via Email
+                          </a>
+                          {!submission.is_read && (
+                            <Button size="sm" variant="outline" onClick={() => handleMarkRead(submission.id)} className="gap-1.5">
+                              <CheckCheck className="w-3.5 h-3.5" /> Mark Read
+                            </Button>
+                          )}
+                          <Button size="sm" variant="destructive" onClick={() => handleDeleteSubmission(submission.id)} className="gap-1.5">
+                            <Trash2 className="w-3.5 h-3.5" /> Delete
+                          </Button>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                </motion.div>
+              ))}
+            </div>
+          )}
+        </section>
 
         {/* ── School Statistics ── */}
         <section>
@@ -449,7 +623,7 @@ const AdminDashboard = () => {
                     </div>
                     <div className="flex gap-2">
                       <Button size="sm" variant="outline" onClick={() => { setEditingStaff(member); setStaffForm({ name: member.name, photo_url: member.photo_url, subject: member.subject, email: member.email, phone: member.phone, role: member.role, is_leadership: member.is_leadership }); setShowStaffModal(true); }} className="flex-1 gap-1.5"><Edit3 className="w-3 h-3" /> Edit</Button>
-                      <Button size="sm" onClick={() => handleDeleteStaff(member.id)} className="gap-1.5 bg-primary hover:bg-primary/90 text-primary-foreground"><Trash2 className="w-3 h-3" /> Delete</Button>
+                      <Button size="sm" variant="destructive" onClick={() => handleDeleteStaff(member.id)} className="gap-1.5"><Trash2 className="w-3 h-3" /> Delete</Button>
                     </div>
                   </div>
                 </motion.div>
@@ -470,7 +644,7 @@ const AdminDashboard = () => {
                   <span className="text-xs font-semibold text-primary bg-primary/10 px-2 py-0.5 rounded-full">{item.category}</span>
                   <h3 className="font-display text-base font-bold text-foreground mt-3 mb-2">{item.title}</h3>
                   <p className="text-xs text-muted-foreground mb-4 line-clamp-2">{item.excerpt}</p>
-                  <Button size="sm" onClick={() => handleDeleteNews(item.id)} className="gap-1.5 w-full bg-primary hover:bg-primary/90 text-primary-foreground"><Trash2 className="w-3 h-3" /> Delete</Button>
+                  <Button size="sm" variant="destructive" onClick={() => handleDeleteNews(item.id)} className="gap-1.5 w-full"><Trash2 className="w-3 h-3" /> Delete</Button>
                 </div>
               ))}
             </div>
@@ -489,7 +663,7 @@ const AdminDashboard = () => {
                   <div className="bg-primary/10 text-primary font-bold text-xs px-3 py-1.5 rounded-lg inline-block mb-3">{event.date}</div>
                   <h3 className="font-display text-base font-bold text-foreground mb-2">{event.title}</h3>
                   <p className="text-xs text-muted-foreground mb-4 line-clamp-2">{event.description}</p>
-                  <Button size="sm" onClick={() => handleDeleteEvent(event.id)} className="gap-1.5 w-full bg-primary hover:bg-primary/90 text-primary-foreground"><Trash2 className="w-3 h-3" /> Delete</Button>
+                  <Button size="sm" variant="destructive" onClick={() => handleDeleteEvent(event.id)} className="gap-1.5 w-full"><Trash2 className="w-3 h-3" /> Delete</Button>
                 </div>
               ))}
             </div>
@@ -509,7 +683,7 @@ const AdminDashboard = () => {
                   <div className="p-3">
                     <p className="font-semibold text-sm text-foreground truncate">{image.title}</p>
                     <p className="text-xs text-muted-foreground mb-3">{image.category}</p>
-                    <Button size="sm" onClick={() => handleDeleteGallery(image.id)} className="gap-1.5 w-full bg-primary hover:bg-primary/90 text-primary-foreground"><Trash2 className="w-3 h-3" /> Delete</Button>
+                    <Button size="sm" variant="destructive" onClick={() => handleDeleteGallery(image.id)} className="gap-1.5 w-full"><Trash2 className="w-3 h-3" /> Delete</Button>
                   </div>
                 </div>
               ))}
@@ -529,7 +703,7 @@ const AdminDashboard = () => {
                   <p className="text-sm text-foreground italic mb-4 line-clamp-3">"{t.quote}"</p>
                   <p className="font-bold text-sm text-foreground">{t.student_name}</p>
                   <p className="text-xs text-muted-foreground mb-4">{t.year}</p>
-                  <Button size="sm" onClick={() => handleDeleteTestimonial(t.id)} className="gap-1.5 w-full bg-primary hover:bg-primary/90 text-primary-foreground"><Trash2 className="w-3 h-3" /> Delete</Button>
+                  <Button size="sm" variant="destructive" onClick={() => handleDeleteTestimonial(t.id)} className="gap-1.5 w-full"><Trash2 className="w-3 h-3" /> Delete</Button>
                 </div>
               ))}
             </div>
