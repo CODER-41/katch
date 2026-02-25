@@ -536,7 +536,7 @@ const AdminDashboard = () => {
                         {/* Action buttons */}
                         <div className="flex gap-2 pt-1">
                           <a
-                            href={`mailto:${submission.email}?subject=Re: ${submission.subject || "Your enquiry to Kakamega School"}`}
+                           href={`https://mail.google.com/mail/?view=cm&to=${submission.email}&su=Re: ${submission.subject || "Your enquiry to Kakamega School"}`} 
                             className="flex-1 inline-flex items-center justify-center gap-2 bg-primary text-primary-foreground text-sm font-semibold px-4 py-2 rounded-lg hover:bg-primary/90 transition-colors"
                           >
                             <Mail className="w-4 h-4" /> Reply via Email
