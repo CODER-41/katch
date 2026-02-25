@@ -1,0 +1,18 @@
+{
+  "name": "Kakamega School",
+  "short_name": "Kakamega",
+  "description": "A national school nurturing academic excellence, character, and leadership since 1932",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#1e3a8a",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/icon.png",
+      "sizes": "any",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
