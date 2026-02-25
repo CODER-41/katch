@@ -21,21 +21,18 @@ export const loginAdmin = (email: string, password: string) =>
 // STAFF
 export const getStaff = () =>
   fetch(`${API_URL}/staff/`, { headers: getHeaders() }).then(res => res.json())
-
 export const createStaff = (data: object) =>
   fetch(`${API_URL}/staff/`, {
     method: 'POST',
     headers: getHeaders(),
     body: JSON.stringify(data)
   }).then(res => res.json())
-
 export const updateStaff = (id: number, data: object) =>
   fetch(`${API_URL}/staff/${id}`, {
     method: 'PUT',
     headers: getHeaders(),
     body: JSON.stringify(data)
   }).then(res => res.json())
-
 export const deleteStaff = (id: number) =>
   fetch(`${API_URL}/staff/${id}`, {
     method: 'DELETE',
@@ -45,14 +42,12 @@ export const deleteStaff = (id: number) =>
 // NEWS
 export const getNews = () =>
   fetch(`${API_URL}/news/`, { headers: getHeaders() }).then(res => res.json())
-
 export const createNews = (data: object) =>
   fetch(`${API_URL}/news/`, {
     method: 'POST',
     headers: getHeaders(),
     body: JSON.stringify(data)
   }).then(res => res.json())
-
 export const deleteNews = (id: number) =>
   fetch(`${API_URL}/news/${id}`, {
     method: 'DELETE',
@@ -62,14 +57,12 @@ export const deleteNews = (id: number) =>
 // EVENTS
 export const getEvents = () =>
   fetch(`${API_URL}/events/`, { headers: getHeaders() }).then(res => res.json())
-
 export const createEvent = (data: object) =>
   fetch(`${API_URL}/events/`, {
     method: 'POST',
     headers: getHeaders(),
     body: JSON.stringify(data)
   }).then(res => res.json())
-
 export const deleteEvent = (id: number) =>
   fetch(`${API_URL}/events/${id}`, {
     method: 'DELETE',
@@ -79,39 +72,27 @@ export const deleteEvent = (id: number) =>
 // GALLERY
 export const getGallery = () =>
   fetch(`${API_URL}/gallery/`, { headers: getHeaders() }).then(res => res.json())
-
 export const createGalleryImage = (data: object) =>
   fetch(`${API_URL}/gallery/`, {
     method: 'POST',
     headers: getHeaders(),
     body: JSON.stringify(data)
   }).then(res => res.json())
-
 export const deleteGalleryImage = (id: number) =>
   fetch(`${API_URL}/gallery/${id}`, {
     method: 'DELETE',
     headers: getHeaders()
   }).then(res => res.json())
 
-// CONTACT
-export const submitContact = (data: object) =>
-  fetch(`${API_URL}/contact/`, {
-    method: 'POST',
-    headers: getHeaders(),
-    body: JSON.stringify(data)
-  }).then(res => res.json())
-
 // TESTIMONIALS
 export const getTestimonials = () =>
   fetch(`${API_URL}/testimonials/`, { headers: getHeaders() }).then(res => res.json())
-
 export const createTestimonial = (data: object) =>
   fetch(`${API_URL}/testimonials/`, {
     method: 'POST',
     headers: getHeaders(),
     body: JSON.stringify(data)
   }).then(res => res.json())
-
 export const deleteTestimonial = (id: number) =>
   fetch(`${API_URL}/testimonials/${id}`, {
     method: 'DELETE',
@@ -121,19 +102,34 @@ export const deleteTestimonial = (id: number) =>
 // ALUMNI
 export const getAlumni = () =>
   fetch(`${API_URL}/alumni/`, { headers: getHeaders() }).then(res => res.json())
-
 export const createAlumni = (data: object) =>
   fetch(`${API_URL}/alumni/`, {
     method: 'POST',
     headers: getHeaders(),
     body: JSON.stringify(data)
   }).then(res => res.json())
-
 export const deleteAlumni = (id: number) =>
   fetch(`${API_URL}/alumni/${id}`, {
     method: 'DELETE',
     headers: getHeaders()
   }).then(res => res.json())
 
+// CONTACT SUBMISSIONS
 export const getContactSubmissions = () =>
   fetch(`${API_URL}/contact/`, { headers: getHeaders() }).then(res => res.json())
+export const submitContact = (data: object) =>
+  fetch(`${API_URL}/contact/`, {
+    method: 'POST',
+    headers: getHeaders(),
+    body: JSON.stringify(data)
+  }).then(res => res.json())
+export const markSubmissionRead = (id: number) =>
+  fetch(`${API_URL}/contact/${id}/read`, {
+    method: 'PUT',
+    headers: getHeaders()
+  }).then(res => res.json())
+export const deleteSubmission = (id: number) =>
+  fetch(`${API_URL}/contact/${id}`, {
+    method: 'DELETE',
+    headers: getHeaders()
+  }).then(res => res.json())
