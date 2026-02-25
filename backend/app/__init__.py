@@ -23,7 +23,7 @@ def create_app():
     bcrypt.init_app(app)
 
     # Allow requests from both common Vite ports
-    CORS(app, origins=["http://localhost:5173", "http://localhost:8080"])
+    CORS(app, origins=["http://localhost:5173", "http://localhost:8080", "https://katch-jade.vercel.app" ])
 
     # Import all models so SQLAlchemy knows about them
     from app import models
