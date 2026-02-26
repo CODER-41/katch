@@ -10,8 +10,14 @@ class Config:
     SECRET_KEY = os.getenv("SECRET_KEY", "dev-secret-key")
     
     # PostgreSQL database connection
-    SQLALCHEMY_DATABASE_URI = os.getenv("DATABASE_URL")
+    # Render provides "postgres://" but SQLAlchemy 2.x requires "postgresql://"
+    _db_url = os.getenv("DATABASE_URL", "")
+    SQLALCHEMY_DATABASE_URI = _db_url.replace("postgres://", "postgresql://", 1) if _db_url else None
     SQLALCHEMY_TRACK_MODIFICATIONS = False
+    SQLALCHEMY_ENGINE_OPTIONS = {
+        "pool_pre_ping": True,   # test connection before using it (handles stale connections)
+        "pool_recycle": 300,     # recycle connections every 5 min
+    }
     
     # JWT secret key and token expiry set to 24 hours
     JWT_SECRET_KEY = os.getenv("JWT_SECRET_KEY", "jwt-secret-key")
