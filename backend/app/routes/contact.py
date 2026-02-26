@@ -1,24 +1,34 @@
-from flask import Blueprint, request, jsonify
+from flask import Blueprint, request, jsonify, current_app
 from flask_jwt_extended import jwt_required
 from flask_mail import Message
 from app import db, mail
 from app.models.contact import ContactSubmission
+from threading import Thread
 import os
 
 contact_bp = Blueprint('contact', __name__)
+
+def _send_emails_async(app, school_msg, auto_reply):
+    """Send both emails in a background thread so the route responds immediately."""
+    with app.app_context():
+        try:
+            mail.send(school_msg)
+            mail.send(auto_reply)
+        except Exception as e:
+            print(f"Email sending failed: {e}")
 
 @contact_bp.route('/', methods=['POST', 'OPTIONS'])
 def submit_contact():
     if request.method == 'OPTIONS':
         return '', 204
-    
+
     try:
         data = request.get_json()
         if not data:
             return jsonify({'error': 'No data provided'}), 400
         if not data.get('name') or not data.get('email') or not data.get('message'):
             return jsonify({'error': 'Name, email and message are required'}), 400
-        
+
         try:
             submission = ContactSubmission(
                 name=data['name'],
@@ -35,27 +45,28 @@ def submit_contact():
             print(traceback.format_exc())
             db.session.rollback()
             return jsonify({'error': 'Database error'}), 500
-        
+
         mail_username = os.getenv("MAIL_USERNAME")
         mail_password = os.getenv("MAIL_PASSWORD")
-        
+
         if mail_username and mail_password:
-            try:
-                school_msg = Message(
-                    subject=f"New Contact Message: {data.get('subject', 'No Subject')}",
-                    recipients=[mail_username],
-                    body=f"Name: {data['name']}\nEmail: {data['email']}\nPhone: {data.get('phone', 'Not provided')}\nMessage:\n{data['message']}"
-                )
-                mail.send(school_msg)
-                auto_reply = Message(
-                    subject="Thank you for contacting Kakamega School",
-                    recipients=[data['email']],
-                    body=f"Dear {data['name']},\n\nThank you for reaching out to Kakamega School. We have received your message and will get back to you within 24 hours.\n\nWarm regards,\nKakamega School Administration\nOnce a Katcherian, always a Katcherian"
-                )
-                mail.send(auto_reply)
-            except Exception as mail_error:
-                print(f"Email sending failed: {mail_error}")
-        
+            school_msg = Message(
+                subject=f"New Contact Message: {data.get('subject', 'No Subject')}",
+                recipients=[mail_username],
+                body=f"Name: {data['name']}\nEmail: {data['email']}\nPhone: {data.get('phone', 'Not provided')}\nMessage:\n{data['message']}"
+            )
+            auto_reply = Message(
+                subject="Thank you for contacting Kakamega School",
+                recipients=[data['email']],
+                body=f"Dear {data['name']},\n\nThank you for reaching out to Kakamega School. We have received your message and will get back to you within 24 hours.\n\nWarm regards,\nKakamega School Administration\nOnce a Katcherian, always a Katcherian"
+            )
+            # Fire-and-forget: don't block the response waiting for SMTP
+            Thread(
+                target=_send_emails_async,
+                args=(current_app._get_current_object(), school_msg, auto_reply),
+                daemon=True
+            ).start()
+
         return jsonify({'message': 'Message sent successfully'}), 201
     except Exception as e:
         import traceback
