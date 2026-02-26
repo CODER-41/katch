@@ -7,8 +7,11 @@ import os
 
 contact_bp = Blueprint('contact', __name__)
 
-@contact_bp.route('/', methods=['POST'])
+@contact_bp.route('/', methods=['POST', 'OPTIONS'])
 def submit_contact():
+    if request.method == 'OPTIONS':
+        return '', 204
+    
     try:
         data = request.get_json()
         if not data:
@@ -26,21 +29,23 @@ def submit_contact():
         db.session.add(submission)
         db.session.commit()
         
-        try:
-            school_msg = Message(
-                subject=f"New Contact Message: {data.get('subject', 'No Subject')}",
-                recipients=[os.getenv("MAIL_USERNAME")],
-                body=f"Name: {data['name']}\nEmail: {data['email']}\nPhone: {data.get('phone', 'Not provided')}\nMessage:\n{data['message']}"
-            )
-            mail.send(school_msg)
-            auto_reply = Message(
-                subject="Thank you for contacting Kakamega School",
-                recipients=[data['email']],
-                body=f"Dear {data['name']},\n\nThank you for reaching out to Kakamega School. We have received your message and will get back to you within 24 hours.\n\nWarm regards,\nKakamega School Administration\nOnce a Katcherian, always a Katcherian"
-            )
-            mail.send(auto_reply)
-        except Exception as e:
-            print(f"Email sending failed: {e}")
+        mail_username = os.getenv("MAIL_USERNAME")
+        if mail_username:
+            try:
+                school_msg = Message(
+                    subject=f"New Contact Message: {data.get('subject', 'No Subject')}",
+                    recipients=[mail_username],
+                    body=f"Name: {data['name']}\nEmail: {data['email']}\nPhone: {data.get('phone', 'Not provided')}\nMessage:\n{data['message']}"
+                )
+                mail.send(school_msg)
+                auto_reply = Message(
+                    subject="Thank you for contacting Kakamega School",
+                    recipients=[data['email']],
+                    body=f"Dear {data['name']},\n\nThank you for reaching out to Kakamega School. We have received your message and will get back to you within 24 hours.\n\nWarm regards,\nKakamega School Administration\nOnce a Katcherian, always a Katcherian"
+                )
+                mail.send(auto_reply)
+            except Exception as e:
+                print(f"Email sending failed: {e}")
         
         return jsonify({'message': 'Message sent successfully'}), 201
     except Exception as e:
