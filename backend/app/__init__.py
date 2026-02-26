@@ -1,4 +1,4 @@
-from flask import Flask, request
+from flask import Flask, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from flask_jwt_extended import JWTManager
 from flask_cors import CORS
@@ -32,15 +32,32 @@ def create_app():
          allow_headers=["Content-Type", "Authorization"],
          methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"])
     
-    @app.after_request
-    def after_request(response):
+    ALLOWED_ORIGINS = ["http://localhost:5173", "http://localhost:8080", "https://katch-jade.vercel.app"]
+
+    def add_cors_headers(response):
         origin = request.headers.get('Origin')
-        if origin in ["http://localhost:5173", "http://localhost:8080", "https://katch-jade.vercel.app"]:
+        if origin in ALLOWED_ORIGINS:
             response.headers['Access-Control-Allow-Origin'] = origin
             response.headers['Access-Control-Allow-Credentials'] = 'true'
             response.headers['Access-Control-Allow-Headers'] = 'Content-Type,Authorization'
             response.headers['Access-Control-Allow-Methods'] = 'GET,POST,PUT,DELETE,OPTIONS'
         return response
+
+    @app.after_request
+    def after_request(response):
+        return add_cors_headers(response)
+
+    @app.errorhandler(500)
+    def internal_error(e):
+        response = jsonify({'error': 'Internal server error'})
+        response.status_code = 500
+        return add_cors_headers(response)
+
+    @app.errorhandler(404)
+    def not_found(e):
+        response = jsonify({'error': 'Not found'})
+        response.status_code = 404
+        return add_cors_headers(response)
 
     # Import all models so SQLAlchemy knows about them
     from app import models

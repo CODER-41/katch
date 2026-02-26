@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { MapPin, Phone, Mail, Clock, Send, CheckCircle } from "lucide-react";
 import Layout from "@/components/layout/Layout";
@@ -6,6 +6,8 @@ import PageHero from "@/components/common/PageHero";
 import { z } from "zod";
 import { toast } from "sonner";
 import { submitContact } from "@/services/api"; // Import real API function
+
+const API_URL = 'https://kakamega-school-backend.onrender.com/api';
 
 // Zod schema for form validation
 const contactSchema = z.object({
@@ -22,7 +24,32 @@ const Contact = () => {
   const [form, setForm] = useState<FormData>({ name: "", email: "", phone: "", subject: "", message: "" });
   const [errors, setErrors] = useState<Partial<Record<keyof FormData, string>>>({});
   const [submitted, setSubmitted] = useState(false);
-  const [loading, setLoading] = useState(false); // Loading state while submitting
+  const [loading, setLoading] = useState(false);
+  const [serverWaking, setServerWaking] = useState(false);
+
+  // Pre-warm the backend on mount so the first submission isn't slow
+  useEffect(() => {
+    let cancelled = false;
+    const wakeup = async () => {
+      try {
+        const res = await fetch(`${API_URL}/health`, { signal: AbortSignal.timeout(10000) });
+        if (!res.ok && !cancelled) setServerWaking(true);
+      } catch {
+        // Server is sleeping — show a subtle notice
+        if (!cancelled) setServerWaking(true);
+        // Retry once after 15 s to finish the cold start
+        setTimeout(async () => {
+          try { await fetch(`${API_URL}/health`, { signal: AbortSignal.timeout(30000) }); }
+          catch { /* ignore */ }
+          if (!cancelled) setServerWaking(false);
+        }, 15000);
+        return;
+      }
+      if (!cancelled) setServerWaking(false);
+    };
+    wakeup();
+    return () => { cancelled = true; };
+  }, []);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -45,18 +72,28 @@ const Contact = () => {
     }
 
     setLoading(true);
-    try {
-      // Send form data to Flask backend
+    const attempt = async () => {
       const data = await submitContact(form);
+      return data;
+    };
+
+    try {
+      let data: { message?: string; error?: string };
+      try {
+        data = await attempt();
+      } catch {
+        // First attempt failed (likely cold start) — wait and retry once
+        await new Promise(r => setTimeout(r, 8000));
+        data = await attempt();
+      }
 
       if (data.message) {
-        // Show success state
         setSubmitted(true);
         toast.success("Message sent successfully! We'll get back to you soon.");
       } else {
         toast.error(data.error || "Something went wrong. Please try again.");
       }
-    } catch (err) {
+    } catch {
       toast.error("Could not connect to server. Please try again later.");
     } finally {
       setLoading(false);
@@ -125,6 +162,11 @@ const Contact = () => {
               ) : (
                 <form onSubmit={handleSubmit} className="bg-card rounded-xl p-8 border border-border space-y-5">
                   <h2 className="font-display text-2xl font-bold text-foreground mb-2">Send a Message</h2>
+                  {serverWaking && (
+                    <p className="text-xs text-muted-foreground bg-muted px-3 py-2 rounded-lg">
+                      Server is starting up — your first message may take a few extra seconds.
+                    </p>
+                  )}
                   <div className="grid sm:grid-cols-2 gap-4">
                     <div>
                       <label className="text-sm font-medium text-foreground mb-1 block">Full Name *</label>
