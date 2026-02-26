@@ -62,7 +62,7 @@ const Home = () => {
   const fetchStats = async () => {
     setStatsLoading(true);
     try {
-      const res = await fetch("http://127.0.0.1:5000/api/stats/");
+      const res = await fetch("https://kakamega-school-backend.onrender.com/api/stats/");
       const data = await res.json();
 
       // Map icon to each stat based on stat_key

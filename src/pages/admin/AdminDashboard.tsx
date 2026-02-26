@@ -244,7 +244,7 @@ const AdminDashboard = () => {
   const fetchStats = async () => {
     setLoading(true);
     try {
-      const res = await fetch("http://127.0.0.1:5000/api/stats/");
+      const res = await fetch("https://kakamega-school-backend.onrender.com/api/stats/");
       setStats(await res.json());
     } catch { setStats([]); } finally { setLoading(false); }
   };
@@ -295,7 +295,7 @@ const AdminDashboard = () => {
   const handleStatSave = async (id: string, value: string) => {
     try {
       const token = localStorage.getItem("access_token");
-      await fetch(`http://127.0.0.1:5000/api/stats/${id}`, {
+      await fetch(`https://kakamega-school-backend.onrender.com/api/stats/${id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
         body: JSON.stringify({ stat_value: value })
