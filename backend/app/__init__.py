@@ -47,6 +47,7 @@ def create_app():
     from app.routes.testimonials import testimonials_bp
     from app.routes.contact import contact_bp
     from app.routes.stats import stats_bp  # Stats blueprint
+    from app.routes.health import health_bp
 
     app.register_blueprint(auth_bp, url_prefix="/api/auth")
     app.register_blueprint(staff_bp, url_prefix="/api/staff")
@@ -58,5 +59,6 @@ def create_app():
     app.register_blueprint(testimonials_bp, url_prefix="/api/testimonials")
     app.register_blueprint(contact_bp, url_prefix="/api/contact")
     app.register_blueprint(stats_bp, url_prefix="/api/stats")  # Register stats
+    app.register_blueprint(health_bp, url_prefix="/api")
 
     return app
