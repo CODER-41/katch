@@ -27,23 +27,28 @@ const Contact = () => {
   const [loading, setLoading] = useState(false);
   const [serverWaking, setServerWaking] = useState(false);
 
-  // Pre-warm the backend on mount so the first submission isn't slow
+  // Pre-warm the backend AND database on mount
   useEffect(() => {
     let cancelled = false;
     const wakeup = async () => {
-      try {
-        const res = await fetch(`${API_URL}/health`, { signal: AbortSignal.timeout(10000) });
-        if (!res.ok && !cancelled) setServerWaking(true);
-      } catch {
-        // Server is sleeping — show a subtle notice
-        if (!cancelled) setServerWaking(true);
-        // Retry once after 15 s to finish the cold start
-        setTimeout(async () => {
-          try { await fetch(`${API_URL}/health`, { signal: AbortSignal.timeout(30000) }); }
-          catch { /* ignore */ }
-          if (!cancelled) setServerWaking(false);
-        }, 15000);
-        return;
+      // First wake the server (fast, no DB)
+      try { await fetch(`${API_URL}/health`, { signal: AbortSignal.timeout(15000) }); }
+      catch { /* server still starting */ }
+
+      if (cancelled) return;
+      setServerWaking(true);
+
+      // Then wake the database — retry up to 3 times with 10s gaps
+      for (let i = 0; i < 3; i++) {
+        try {
+          const res = await fetch(`${API_URL}/ping`, { signal: AbortSignal.timeout(15000) });
+          if (res.ok) {
+            if (!cancelled) setServerWaking(false);
+            return;
+          }
+        } catch { /* DB still waking */ }
+        if (cancelled) return;
+        await new Promise(r => setTimeout(r, 10000));
       }
       if (!cancelled) setServerWaking(false);
     };
