@@ -19,15 +19,22 @@ def submit_contact():
         if not data.get('name') or not data.get('email') or not data.get('message'):
             return jsonify({'error': 'Name, email and message are required'}), 400
         
-        submission = ContactSubmission(
-            name=data['name'],
-            email=data['email'],
-            phone=data.get('phone'),
-            subject=data.get('subject'),
-            message=data['message']
-        )
-        db.session.add(submission)
-        db.session.commit()
+        try:
+            submission = ContactSubmission(
+                name=data['name'],
+                email=data['email'],
+                phone=data.get('phone', ''),
+                subject=data.get('subject', ''),
+                message=data['message']
+            )
+            db.session.add(submission)
+            db.session.commit()
+        except Exception as db_error:
+            import traceback
+            print(f"Database error: {db_error}")
+            print(traceback.format_exc())
+            db.session.rollback()
+            return jsonify({'error': 'Database error'}), 500
         
         mail_username = os.getenv("MAIL_USERNAME")
         mail_password = os.getenv("MAIL_PASSWORD")
@@ -46,15 +53,14 @@ def submit_contact():
                     body=f"Dear {data['name']},\n\nThank you for reaching out to Kakamega School. We have received your message and will get back to you within 24 hours.\n\nWarm regards,\nKakamega School Administration\nOnce a Katcherian, always a Katcherian"
                 )
                 mail.send(auto_reply)
-            except Exception as e:
-                print(f"Email sending failed: {e}")
+            except Exception as mail_error:
+                print(f"Email sending failed: {mail_error}")
         
         return jsonify({'message': 'Message sent successfully'}), 201
     except Exception as e:
         import traceback
         print(f"Contact submission error: {e}")
         print(traceback.format_exc())
-        db.session.rollback()
         return jsonify({'error': 'Failed to submit message'}), 500
 
 @contact_bp.route('/', methods=['GET'])
