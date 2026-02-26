@@ -30,7 +30,9 @@ def submit_contact():
         db.session.commit()
         
         mail_username = os.getenv("MAIL_USERNAME")
-        if mail_username:
+        mail_password = os.getenv("MAIL_PASSWORD")
+        
+        if mail_username and mail_password:
             try:
                 school_msg = Message(
                     subject=f"New Contact Message: {data.get('subject', 'No Subject')}",
@@ -49,9 +51,11 @@ def submit_contact():
         
         return jsonify({'message': 'Message sent successfully'}), 201
     except Exception as e:
+        import traceback
         print(f"Contact submission error: {e}")
+        print(traceback.format_exc())
         db.session.rollback()
-        return jsonify({'error': 'Failed to submit message', 'details': str(e)}), 500
+        return jsonify({'error': 'Failed to submit message'}), 500
 
 @contact_bp.route('/', methods=['GET'])
 @jwt_required()

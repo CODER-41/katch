@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, request
 from flask_sqlalchemy import SQLAlchemy
 from flask_jwt_extended import JWTManager
 from flask_cors import CORS
@@ -25,12 +25,22 @@ def create_app():
     mail.init_app(app)
     bcrypt.init_app(app)
 
-    # Configure CORS - allow all origins temporarily to debug
+    # Configure CORS
     CORS(app, 
          origins=["http://localhost:5173", "http://localhost:8080", "https://katch-jade.vercel.app"],
          supports_credentials=True,
          allow_headers=["Content-Type", "Authorization"],
          methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"])
+    
+    @app.after_request
+    def after_request(response):
+        origin = request.headers.get('Origin')
+        if origin in ["http://localhost:5173", "http://localhost:8080", "https://katch-jade.vercel.app"]:
+            response.headers['Access-Control-Allow-Origin'] = origin
+            response.headers['Access-Control-Allow-Credentials'] = 'true'
+            response.headers['Access-Control-Allow-Headers'] = 'Content-Type,Authorization'
+            response.headers['Access-Control-Allow-Methods'] = 'GET,POST,PUT,DELETE,OPTIONS'
+        return response
 
     # Import all models so SQLAlchemy knows about them
     from app import models
