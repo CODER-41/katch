@@ -15,6 +15,9 @@ bcrypt = Bcrypt()
 def create_app():
     app = Flask(__name__)
     app.config.from_object(Config)  # Load config from config.py
+    
+    # Disable strict slashes before anything else
+    app.url_map.strict_slashes = False
 
     # Bind extensions to the app
     db.init_app(app)
@@ -22,15 +25,12 @@ def create_app():
     mail.init_app(app)
     bcrypt.init_app(app)
 
-    # Configure CORS with proper settings
+    # Configure CORS - allow all origins temporarily to debug
     CORS(app, 
-         resources={r"/api/*": {"origins": ["http://localhost:5173", "http://localhost:8080", "https://katch-jade.vercel.app"]}},
+         origins=["http://localhost:5173", "http://localhost:8080", "https://katch-jade.vercel.app"],
          supports_credentials=True,
          allow_headers=["Content-Type", "Authorization"],
-         methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-         expose_headers=["Content-Type", "Authorization"])
-    
-    app.url_map.strict_slashes = False
+         methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"])
 
     # Import all models so SQLAlchemy knows about them
     from app import models
