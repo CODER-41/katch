@@ -22,8 +22,11 @@ def create_app():
     # Bind extensions to the app
     db.init_app(app)
     jwt.init_app(app)
-    mail.init_app(app)
     bcrypt.init_app(app)
+    
+    # Only initialize mail if credentials are present
+    if app.config.get('MAIL_USERNAME') and app.config.get('MAIL_PASSWORD'):
+        mail.init_app(app)
 
     # Configure CORS
     CORS(app, 
