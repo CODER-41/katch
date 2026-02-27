@@ -1,4 +1,70 @@
 <svg width="512" height="512" xmlns="http://www.w3.org/2000/svg">
-  <rect width="512" height="512" fill="#16a34a" rx="64"/>
-  <text x="256" y="370" font-size="320" fill="white" text-anchor="middle" font-family="Arial, sans-serif" font-weight="bold">K</text>
+  <defs>
+    <!-- Gradient for depth -->
+    <linearGradient id="greenGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#22c55e;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#15803d;stop-opacity:1" />
+    </linearGradient>
+    
+    <linearGradient id="shieldGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#ffffff;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#f1f5f9;stop-opacity:1" />
+    </linearGradient>
+    
+    <!-- Shadow filter -->
+    <filter id="shadow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="4"/>
+      <feOffset dx="0" dy="4" result="offsetblur"/>
+      <feComponentTransfer>
+        <feFuncA type="linear" slope="0.3"/>
+      </feComponentTransfer>
+      <feMerge>
+        <feMergeNode/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+  
+  <!-- Background with gradient -->
+  <rect width="512" height="512" fill="url(#greenGrad)"/>
+  
+  <!-- Decorative circles -->
+  <circle cx="256" cy="256" r="220" fill="white" opacity="0.08"/>
+  <circle cx="256" cy="256" r="180" fill="white" opacity="0.08"/>
+  
+  <!-- Main shield with shadow -->
+  <g filter="url(#shadow)">
+    <path d="M 256 60 L 120 110 L 120 250 Q 120 380 256 460 Q 392 380 392 250 L 392 110 Z" 
+          fill="url(#shieldGrad)" stroke="#15803d" stroke-width="6"/>
+  </g>
+  
+  <!-- Inner green shield -->
+  <path d="M 256 90 L 145 130 L 145 250 Q 145 360 256 425 Q 367 360 367 250 L 367 130 Z" 
+        fill="url(#greenGrad)"/>
+  
+  <!-- Decorative border lines -->
+  <path d="M 256 90 L 145 130 L 145 250 Q 145 360 256 425 Q 367 360 367 250 L 367 130 Z" 
+        fill="none" stroke="white" stroke-width="2" opacity="0.3"/>
+  
+  <!-- Letter K with shadow -->
+  <text x="256" y="310" font-size="180" fill="white" text-anchor="middle" 
+        font-family="Georgia, serif" font-weight="bold" 
+        style="text-shadow: 0 4px 8px rgba(0,0,0,0.3)">K</text>
+  
+  <!-- Top banner -->
+  <rect x="140" y="140" width="232" height="32" fill="white" rx="4" opacity="0.95"/>
+  <text x="256" y="162" font-size="16" fill="#15803d" text-anchor="middle" 
+        font-family="Arial, sans-serif" font-weight="bold" letter-spacing="2">KAKAMEGA</text>
+  
+  <!-- Bottom banner with gradient -->
+  <rect x="150" y="370" width="212" height="36" fill="white" rx="6" opacity="0.95"/>
+  <text x="256" y="395" font-size="18" fill="#15803d" text-anchor="middle" 
+        font-family="Georgia, serif" font-weight="bold">EST. 1932</text>
+  
+  <!-- Decorative stars -->
+  <circle cx="180" cy="250" r="3" fill="white" opacity="0.6"/>
+  <circle cx="332" cy="250" r="3" fill="white" opacity="0.6"/>
+  
+  <!-- Excellence ribbon accent -->
+  <path d="M 256 420 L 246 435 L 256 430 L 266 435 Z" fill="#fbbf24" opacity="0.8"/>
 </svg>
