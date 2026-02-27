@@ -224,6 +224,9 @@ const AdminDashboard = () => {
   const [loading, setLoading] = useState(true);
   const [activeCategory, setActiveCategory] = useState<string>("all");
 
+  // ── Shared submitting state (only one modal open at a time) ──
+  const [submitting, setSubmitting] = useState(false);
+
   // ── Staff state ──
   const [staff, setStaff] = useState<StaffMember[]>([]);
   const [staffLoading, setStaffLoading] = useState(true);
@@ -348,11 +351,14 @@ const AdminDashboard = () => {
   // ── Staff handlers ──
   const handleStaffSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (submitting) return;
+    setSubmitting(true);
     try {
       if (editingStaff) { await updateStaff(Number(editingStaff.id), staffForm); toast({ title: "Staff updated" }); }
       else { await createStaff(staffForm); toast({ title: "Staff added" }); }
       await fetchStaff(); setShowStaffModal(false);
     } catch { toast({ title: "Error", description: "Could not save staff", variant: "destructive" }); }
+    finally { setSubmitting(false); }
   };
 
   const handleDeleteStaff = async (id: string) => {
@@ -364,8 +370,11 @@ const AdminDashboard = () => {
   // ── News handlers ──
   const handleNewsSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (submitting) return;
+    setSubmitting(true);
     try { await createNews(newsForm); toast({ title: "News article added" }); await fetchNews(); setShowNewsModal(false); setNewsForm({ title: "", excerpt: "", category: "" }); }
     catch { toast({ title: "Error", description: "Could not add news", variant: "destructive" }); }
+    finally { setSubmitting(false); }
   };
 
   const handleDeleteNews = async (id: number) => {
@@ -377,8 +386,11 @@ const AdminDashboard = () => {
   // ── Events handlers ──
   const handleEventSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (submitting) return;
+    setSubmitting(true);
     try { await createEvent(eventForm); toast({ title: "Event added" }); await fetchEvents(); setShowEventModal(false); setEventForm({ title: "", date: "", description: "" }); }
     catch { toast({ title: "Error", description: "Could not add event", variant: "destructive" }); }
+    finally { setSubmitting(false); }
   };
 
   const handleDeleteEvent = async (id: number) => {
@@ -390,8 +402,11 @@ const AdminDashboard = () => {
   // ── Gallery handlers ──
   const handleGallerySubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (submitting) return;
+    setSubmitting(true);
     try { await createGalleryImage(galleryForm); toast({ title: "Image added" }); await fetchGallery(); setShowGalleryModal(false); setGalleryForm({ image_url: "", title: "", category: "" }); }
     catch { toast({ title: "Error", description: "Could not add image", variant: "destructive" }); }
+    finally { setSubmitting(false); }
   };
 
   const handleDeleteGallery = async (id: number) => {
@@ -403,8 +418,11 @@ const AdminDashboard = () => {
   // ── Testimonials handlers ──
   const handleTestimonialSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (submitting) return;
+    setSubmitting(true);
     try { await createTestimonial(testimonialForm); toast({ title: "Testimonial added" }); await fetchTestimonials(); setShowTestimonialModal(false); setTestimonialForm({ student_name: "", year: "", quote: "" }); }
     catch { toast({ title: "Error", description: "Could not add testimonial", variant: "destructive" }); }
+    finally { setSubmitting(false); }
   };
 
   const handleDeleteTestimonial = async (id: number) => {
@@ -877,11 +895,11 @@ const AdminDashboard = () => {
 
       {/* ── Staff Modal ── */}
       {showStaffModal && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4" onClick={() => setShowStaffModal(false)}>
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4" onClick={() => { setShowStaffModal(false); setEditingStaff(null); setStaffForm({ name: "", photo_url: "", subject: "", email: "", phone: "", role: "", is_leadership: false }); }}>
           <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} onClick={(e) => e.stopPropagation()} className="bg-card rounded-xl shadow-xl max-w-md w-full max-h-[90vh] overflow-y-auto">
             <div className="p-6 border-b border-border flex items-center justify-between">
               <h3 className="font-display text-xl font-bold text-foreground">{editingStaff ? "Edit Staff Member" : "Add New Staff Member"}</h3>
-              <button onClick={() => setShowStaffModal(false)} className="p-1 hover:bg-muted rounded-md"><X className="w-5 h-5" /></button>
+              <button onClick={() => { setShowStaffModal(false); setEditingStaff(null); setStaffForm({ name: "", photo_url: "", subject: "", email: "", phone: "", role: "", is_leadership: false }); }} className="p-1 hover:bg-muted rounded-md"><X className="w-5 h-5" /></button>
             </div>
             <form onSubmit={handleStaffSubmit} className="p-6 space-y-4">
               {[{ label: "Name", key: "name", placeholder: "John Doe", required: true },
@@ -893,7 +911,7 @@ const AdminDashboard = () => {
               ].map(({ label, key, placeholder, required, type }) => (
                 <div key={key}>
                   <label className="block text-sm font-semibold text-foreground mb-1.5">{label}</label>
-                  <Input required={required} type={type || "text"} value={(staffForm as Record<string, string>)[key]} onChange={(e) => setStaffForm({ ...staffForm, [key]: e.target.value })} placeholder={placeholder} />
+                  <Input required={required} type={type || "text"} value={staffForm[key as keyof typeof staffForm] as string} onChange={(e) => setStaffForm({ ...staffForm, [key]: e.target.value })} placeholder={placeholder} />
                 </div>
               ))}
               <div className="flex items-center gap-2">
@@ -901,8 +919,11 @@ const AdminDashboard = () => {
                 <label htmlFor="is_leadership" className="text-sm font-semibold text-foreground">Leadership/Management member</label>
               </div>
               <div className="flex gap-3 pt-2">
-                <Button type="submit" className="flex-1 gap-2"><Save className="w-4 h-4" /> {editingStaff ? "Update" : "Add"} Staff</Button>
-                <Button type="button" variant="outline" onClick={() => setShowStaffModal(false)}>Cancel</Button>
+                <Button type="submit" disabled={submitting} className="flex-1 gap-2">
+                  {submitting ? <RefreshCw className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
+                  {submitting ? "Saving..." : editingStaff ? "Update Staff" : "Add Staff"}
+                </Button>
+                <Button type="button" variant="outline" disabled={submitting} onClick={() => { setShowStaffModal(false); setEditingStaff(null); setStaffForm({ name: "", photo_url: "", subject: "", email: "", phone: "", role: "", is_leadership: false }); }}>Cancel</Button>
               </div>
             </form>
           </motion.div>
@@ -934,8 +955,11 @@ const AdminDashboard = () => {
                 </select>
               </div>
               <div className="flex gap-3 pt-2">
-                <Button type="submit" className="flex-1 gap-2"><Save className="w-4 h-4" /> Add Article</Button>
-                <Button type="button" variant="outline" onClick={() => setShowNewsModal(false)}>Cancel</Button>
+                <Button type="submit" disabled={submitting} className="flex-1 gap-2">
+                  {submitting ? <RefreshCw className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
+                  {submitting ? "Saving..." : "Add Article"}
+                </Button>
+                <Button type="button" variant="outline" disabled={submitting} onClick={() => setShowNewsModal(false)}>Cancel</Button>
               </div>
             </form>
           </motion.div>
@@ -964,8 +988,11 @@ const AdminDashboard = () => {
                 <textarea required value={eventForm.description} onChange={(e) => setEventForm({ ...eventForm, description: e.target.value })} placeholder="Brief description of the event..." rows={3} className="w-full px-3 py-2 rounded-lg border border-input bg-background text-sm focus:outline-none focus:ring-2 focus:ring-ring resize-none" />
               </div>
               <div className="flex gap-3 pt-2">
-                <Button type="submit" className="flex-1 gap-2"><Save className="w-4 h-4" /> Add Event</Button>
-                <Button type="button" variant="outline" onClick={() => setShowEventModal(false)}>Cancel</Button>
+                <Button type="submit" disabled={submitting} className="flex-1 gap-2">
+                  {submitting ? <RefreshCw className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
+                  {submitting ? "Saving..." : "Add Event"}
+                </Button>
+                <Button type="button" variant="outline" disabled={submitting} onClick={() => setShowEventModal(false)}>Cancel</Button>
               </div>
             </form>
           </motion.div>
@@ -997,8 +1024,11 @@ const AdminDashboard = () => {
                 </select>
               </div>
               <div className="flex gap-3 pt-2">
-                <Button type="submit" className="flex-1 gap-2"><Save className="w-4 h-4" /> Add Image</Button>
-                <Button type="button" variant="outline" onClick={() => setShowGalleryModal(false)}>Cancel</Button>
+                <Button type="submit" disabled={submitting} className="flex-1 gap-2">
+                  {submitting ? <RefreshCw className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
+                  {submitting ? "Saving..." : "Add Image"}
+                </Button>
+                <Button type="button" variant="outline" disabled={submitting} onClick={() => setShowGalleryModal(false)}>Cancel</Button>
               </div>
             </form>
           </motion.div>
@@ -1132,8 +1162,11 @@ const AdminDashboard = () => {
                 <textarea required value={testimonialForm.quote} onChange={(e) => setTestimonialForm({ ...testimonialForm, quote: e.target.value })} placeholder="The brotherhood at Kakamega..." rows={4} className="w-full px-3 py-2 rounded-lg border border-input bg-background text-sm focus:outline-none focus:ring-2 focus:ring-ring resize-none" />
               </div>
               <div className="flex gap-3 pt-2">
-                <Button type="submit" className="flex-1 gap-2"><Save className="w-4 h-4" /> Add Testimonial</Button>
-                <Button type="button" variant="outline" onClick={() => setShowTestimonialModal(false)}>Cancel</Button>
+                <Button type="submit" disabled={submitting} className="flex-1 gap-2">
+                  {submitting ? <RefreshCw className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
+                  {submitting ? "Saving..." : "Add Testimonial"}
+                </Button>
+                <Button type="button" variant="outline" disabled={submitting} onClick={() => setShowTestimonialModal(false)}>Cancel</Button>
               </div>
             </form>
           </motion.div>
