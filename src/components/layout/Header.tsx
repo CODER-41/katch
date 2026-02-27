@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Menu, X, Phone, Mail, ShieldCheck } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import schoolBadge from "@/assets/school-badge.jpeg";
 
 const navLinks = [
   { label: "Home", path: "/" },
@@ -48,9 +49,11 @@ const Header = () => {
       <header className="bg-card/95 backdrop-blur-md sticky top-0 z-50 shadow-sm border-b border-border">
         <div className="container mx-auto flex items-center justify-between py-3 px-4">
           <Link to="/" className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-full bg-primary flex items-center justify-center">
-              <span className="text-primary-foreground font-display font-bold text-lg">K</span>
-            </div>
+            <img
+              src={schoolBadge}
+              alt="Kakamega School Badge"
+              className="w-10 h-10 rounded-full object-cover border border-border"
+            />
             <div>
               <h1 className="font-display text-lg font-bold leading-tight text-foreground">
                 Kakamega School
