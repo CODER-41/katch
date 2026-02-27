@@ -132,3 +132,28 @@ export const deleteSubmission = (id: number) =>
     method: 'DELETE',
     headers: getHeaders()
   }).then(res => res.json())
+
+// ADMISSIONS
+export const submitAdmission = (data: object) =>
+  fetch(`${API_URL}/admissions/`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(data)
+  }).then(res => res.json())
+export const getAdmissions = (status?: string) =>
+  fetch(`${API_URL}/admissions/${status ? `?status=${status}` : ''}`, {
+    headers: getHeaders()
+  }).then(res => res.json())
+export const getAdmissionStats = () =>
+  fetch(`${API_URL}/admissions/stats`, { headers: getHeaders() }).then(res => res.json())
+export const updateAdmissionStatus = (id: number, data: object) =>
+  fetch(`${API_URL}/admissions/${id}/status`, {
+    method: 'PUT',
+    headers: getHeaders(),
+    body: JSON.stringify(data)
+  }).then(res => res.json())
+export const deleteAdmission = (id: number) =>
+  fetch(`${API_URL}/admissions/${id}`, {
+    method: 'DELETE',
+    headers: getHeaders()
+  }).then(res => res.json())

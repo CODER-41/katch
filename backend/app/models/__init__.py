@@ -11,3 +11,4 @@ from app.models.kcse_results import KcseResult
 from app.models.testimonials import Testimonial
 from app.models.contact import ContactSubmission
 from app.models.school_stats import SchoolStat
+from app.models.admission import Admission

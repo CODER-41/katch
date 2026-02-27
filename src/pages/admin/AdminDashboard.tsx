@@ -5,7 +5,7 @@ import {
   Users, GraduationCap, Building2, BookOpen, Trophy, FlaskConical,
   LogOut, Save, Edit3, X, Check, LayoutDashboard, RefreshCw, Shield,
   Plus, Mail, Phone, Trash2, Newspaper, Calendar, Image, MessageSquare,
-  Inbox, CheckCheck, Clock
+  Inbox, CheckCheck, Clock, Flag, ExternalLink
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -16,7 +16,8 @@ import {
   getEvents, createEvent, deleteEvent,
   getGallery, createGalleryImage, deleteGalleryImage,
   getTestimonials, createTestimonial, deleteTestimonial,
-  getContactSubmissions, markSubmissionRead, deleteSubmission
+  getContactSubmissions, markSubmissionRead, deleteSubmission,
+  getAdmissions, getAdmissionStats, updateAdmissionStatus, deleteAdmission
 } from "@/services/api";
 import schoolBadge from "@/assets/school-badge.jpeg";
 
@@ -83,6 +84,35 @@ interface ContactSubmission {
   message: string;
   is_read: boolean;
   created_at: string;
+}
+
+interface AdmissionApplication {
+  id: number;
+  application_number: string;
+  applicant_name: string;
+  gender: string;
+  date_of_birth: string;
+  nationality: string;
+  previous_school: string;
+  parent_name: string;
+  parent_relationship: string;
+  parent_phone: string;
+  parent_email: string;
+  kjsea_score: number;
+  grade_band: string;
+  kjsea_result_url: string;
+  birth_cert_url: string;
+  passport_photo_url: string;
+  school_leaving_cert_url: string;
+  medical_report_url: string;
+  status: string;
+  is_flagged: boolean;
+  admin_notes: string;
+  created_at: string;
+}
+
+interface AdmissionStats {
+  total: number; flagged: number; accepted: number; rejected: number; pending: number;
 }
 
 // ─── Category config for stats ────────────────────────────────────────────────
@@ -230,6 +260,15 @@ const AdminDashboard = () => {
   const [submissionsLoading, setSubmissionsLoading] = useState(true);
   const [expandedSubmission, setExpandedSubmission] = useState<number | null>(null);
 
+  // ── Admissions state ──
+  const [admissions, setAdmissions] = useState<AdmissionApplication[]>([]);
+  const [admissionsLoading, setAdmissionsLoading] = useState(true);
+  const [admissionStats, setAdmissionStats] = useState<AdmissionStats>({ total: 0, flagged: 0, accepted: 0, rejected: 0, pending: 0 });
+  const [admissionFilter, setAdmissionFilter] = useState("all");
+  const [selectedAdmission, setSelectedAdmission] = useState<AdmissionApplication | null>(null);
+  const [admissionNotes, setAdmissionNotes] = useState("");
+  const [admissionActionLoading, setAdmissionActionLoading] = useState(false);
+
   // ── Fetch all data on mount ──
   useEffect(() => {
     fetchStats();
@@ -239,6 +278,7 @@ const AdminDashboard = () => {
     fetchGallery();
     fetchTestimonials();
     fetchSubmissions();
+    fetchAdmissions();
   }, []);
 
   const fetchStats = async () => {
@@ -372,6 +412,44 @@ const AdminDashboard = () => {
     try { await deleteTestimonial(id); toast({ title: "Testimonial deleted" }); await fetchTestimonials(); }
     catch { toast({ title: "Error", description: "Could not delete testimonial", variant: "destructive" }); }
   };
+
+  // ── Admissions fetch & handlers ──
+  const fetchAdmissions = async () => {
+    setAdmissionsLoading(true);
+    try {
+      const [list, stats] = await Promise.all([getAdmissions(), getAdmissionStats()]);
+      setAdmissions(Array.isArray(list) ? list : []);
+      if (stats && !stats.error) setAdmissionStats(stats);
+    } catch { toast({ title: "Error", description: "Could not load applications", variant: "destructive" }); }
+    finally { setAdmissionsLoading(false); }
+  };
+
+  const handleAdmissionStatus = async (id: number, status: "accepted" | "rejected") => {
+    setAdmissionActionLoading(true);
+    try {
+      const updated = await updateAdmissionStatus(id, { status, admin_notes: admissionNotes });
+      setAdmissions(prev => prev.map(a => a.id === id ? updated : a));
+      setAdmissionStats(prev => {
+        const old = selectedAdmission?.status as keyof AdmissionStats;
+        return { ...prev, [old]: Math.max(0, prev[old] - 1), [status]: prev[status] + 1 };
+      });
+      setSelectedAdmission(null);
+      setAdmissionNotes("");
+      toast({ title: `Application ${status}`, description: `${selectedAdmission?.applicant_name}'s application has been ${status}.` });
+    } catch { toast({ title: "Error", description: "Could not update status", variant: "destructive" }); }
+    finally { setAdmissionActionLoading(false); }
+  };
+
+  const handleDeleteAdmission = async (id: number) => {
+    try {
+      await deleteAdmission(id);
+      setAdmissions(prev => prev.filter(a => a.id !== id));
+      if (selectedAdmission?.id === id) setSelectedAdmission(null);
+      toast({ title: "Application deleted" });
+    } catch { toast({ title: "Error", description: "Could not delete application", variant: "destructive" }); }
+  };
+
+  const filteredAdmissions = admissionFilter === "all" ? admissions : admissions.filter(a => a.status === admissionFilter);
 
   // ── Contact Submissions handlers ──
   const handleMarkRead = async (id: number) => {
@@ -555,6 +633,91 @@ const AdminDashboard = () => {
                   )}
                 </motion.div>
               ))}
+            </div>
+          )}
+        </section>
+
+        {/* ── Admissions Applications ── */}
+        <section>
+          <SectionHeader icon={GraduationCap} title="Admission Applications" desc="KJSEA-based applications sorted by score — review, accept, or reject" badge={admissionStats.flagged} />
+
+          {/* Stats bar */}
+          <div className="grid grid-cols-2 sm:grid-cols-5 gap-3 mb-6">
+            {([
+              { label: "Total", value: admissionStats.total, color: "text-foreground", bg: "bg-muted" },
+              { label: "Flagged", value: admissionStats.flagged, color: "text-blue-600", bg: "bg-blue-50" },
+              { label: "Pending", value: admissionStats.pending, color: "text-amber-600", bg: "bg-amber-50" },
+              { label: "Accepted", value: admissionStats.accepted, color: "text-green-600", bg: "bg-green-50" },
+              { label: "Rejected", value: admissionStats.rejected, color: "text-red-500", bg: "bg-red-50" },
+            ] as const).map(s => (
+              <div key={s.label} className={`${s.bg} rounded-xl px-4 py-3 text-center`}>
+                <p className={`text-2xl font-bold font-mono ${s.color}`}>{s.value}</p>
+                <p className="text-xs text-muted-foreground mt-0.5">{s.label}</p>
+              </div>
+            ))}
+          </div>
+
+          {/* Filter tabs */}
+          <div className="flex flex-wrap gap-2 mb-5">
+            {["all", "flagged", "pending", "accepted", "rejected"].map(f => (
+              <button key={f} onClick={() => setAdmissionFilter(f)} className={`px-4 py-1.5 rounded-full text-xs font-semibold capitalize transition-colors ${admissionFilter === f ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground hover:bg-muted/80"}`}>
+                {f === "all" ? `All (${admissionStats.total})` : f === "flagged" ? `Flagged (${admissionStats.flagged})` : f === "pending" ? `Pending (${admissionStats.pending})` : f === "accepted" ? `Accepted (${admissionStats.accepted})` : `Rejected (${admissionStats.rejected})`}
+              </button>
+            ))}
+          </div>
+
+          {admissionsLoading ? (
+            <div className="flex items-center justify-center py-10"><RefreshCw className="w-8 h-8 text-primary animate-spin" /></div>
+          ) : filteredAdmissions.length === 0 ? (
+            <div className="text-center py-12 text-muted-foreground bg-muted/30 rounded-xl">
+              <GraduationCap className="w-10 h-10 mx-auto mb-3 opacity-30" />
+              <p className="font-medium">No applications found</p>
+            </div>
+          ) : (
+            <div className="overflow-x-auto rounded-xl border border-border">
+              <table className="w-full text-sm">
+                <thead className="bg-muted/50">
+                  <tr className="text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+                    <th className="px-4 py-3">Ref #</th>
+                    <th className="px-4 py-3">Applicant</th>
+                    <th className="px-4 py-3">Score</th>
+                    <th className="px-4 py-3">Band</th>
+                    <th className="px-4 py-3 hidden md:table-cell">Previous School</th>
+                    <th className="px-4 py-3">Status</th>
+                    <th className="px-4 py-3">Actions</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-border">
+                  {filteredAdmissions.map(app => {
+                    const statusColor = app.status === "accepted" ? "bg-green-100 text-green-700" : app.status === "rejected" ? "bg-red-100 text-red-600" : app.status === "flagged" ? "bg-blue-100 text-blue-700" : "bg-amber-100 text-amber-700";
+                    return (
+                      <tr key={app.id} className="bg-card hover:bg-muted/30 transition-colors">
+                        <td className="px-4 py-3 font-mono text-xs text-muted-foreground">{app.application_number}</td>
+                        <td className="px-4 py-3">
+                          <p className="font-semibold text-foreground">{app.applicant_name}</p>
+                          <p className="text-xs text-muted-foreground">{app.gender}</p>
+                        </td>
+                        <td className="px-4 py-3">
+                          <span className={`font-bold font-mono ${app.kjsea_score >= 60 ? "text-green-600" : app.kjsea_score >= 50 ? "text-blue-600" : app.kjsea_score >= 40 ? "text-amber-600" : "text-red-500"}`}>{app.kjsea_score}/72</span>
+                        </td>
+                        <td className="px-4 py-3">
+                          <span className={`text-xs font-bold px-2 py-1 rounded-full ${app.grade_band === "EE" ? "bg-green-100 text-green-700" : app.grade_band === "ME" ? "bg-blue-100 text-blue-700" : app.grade_band === "AE" ? "bg-amber-100 text-amber-700" : "bg-red-100 text-red-600"}`}>{app.grade_band}</span>
+                        </td>
+                        <td className="px-4 py-3 hidden md:table-cell text-muted-foreground text-xs">{app.previous_school}</td>
+                        <td className="px-4 py-3">
+                          <span className={`text-xs font-semibold px-2.5 py-1 rounded-full capitalize ${statusColor}`}>
+                            {app.status === "flagged" && <Flag className="inline w-3 h-3 mr-1" />}
+                            {app.status}
+                          </span>
+                        </td>
+                        <td className="px-4 py-3">
+                          <button onClick={() => { setSelectedAdmission(app); setAdmissionNotes(app.admin_notes || ""); }} className="text-xs font-medium text-primary hover:underline">View</button>
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
             </div>
           )}
         </section>
@@ -838,6 +1001,111 @@ const AdminDashboard = () => {
                 <Button type="button" variant="outline" onClick={() => setShowGalleryModal(false)}>Cancel</Button>
               </div>
             </form>
+          </motion.div>
+        </div>
+      )}
+
+      {/* ── Admission Detail Modal ── */}
+      {selectedAdmission && (
+        <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4" onClick={() => setSelectedAdmission(null)}>
+          <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} onClick={e => e.stopPropagation()} className="bg-card rounded-2xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto">
+            {/* Header */}
+            <div className="sticky top-0 bg-card border-b border-border px-6 py-4 flex items-center justify-between z-10">
+              <div>
+                <h3 className="font-display text-lg font-bold text-foreground">{selectedAdmission.applicant_name}</h3>
+                <p className="text-xs font-mono text-muted-foreground">{selectedAdmission.application_number}</p>
+              </div>
+              <div className="flex items-center gap-3">
+                <span className={`text-xs font-bold px-3 py-1.5 rounded-full capitalize ${selectedAdmission.status === "accepted" ? "bg-green-100 text-green-700" : selectedAdmission.status === "rejected" ? "bg-red-100 text-red-600" : selectedAdmission.status === "flagged" ? "bg-blue-100 text-blue-700" : "bg-amber-100 text-amber-700"}`}>{selectedAdmission.status}</span>
+                <button onClick={() => setSelectedAdmission(null)} className="p-1.5 hover:bg-muted rounded-lg"><X className="w-5 h-5" /></button>
+              </div>
+            </div>
+
+            <div className="p-6 space-y-6">
+              {/* Score highlight */}
+              <div className={`rounded-xl border p-4 flex items-center justify-between ${selectedAdmission.kjsea_score >= 60 ? "bg-green-50 border-green-200" : selectedAdmission.kjsea_score >= 50 ? "bg-blue-50 border-blue-200" : selectedAdmission.kjsea_score >= 40 ? "bg-amber-50 border-amber-200" : "bg-red-50 border-red-200"}`}>
+                <div>
+                  <p className="text-xs text-muted-foreground mb-1">KJSEA Score</p>
+                  <p className={`text-3xl font-bold font-mono ${selectedAdmission.kjsea_score >= 60 ? "text-green-600" : selectedAdmission.kjsea_score >= 50 ? "text-blue-600" : selectedAdmission.kjsea_score >= 40 ? "text-amber-600" : "text-red-500"}`}>{selectedAdmission.kjsea_score}/72</p>
+                </div>
+                <span className={`text-2xl font-bold px-4 py-2 rounded-xl bg-white/70 ${selectedAdmission.kjsea_score >= 60 ? "text-green-600" : selectedAdmission.kjsea_score >= 50 ? "text-blue-600" : selectedAdmission.kjsea_score >= 40 ? "text-amber-600" : "text-red-500"}`}>{selectedAdmission.grade_band}</span>
+              </div>
+
+              {/* Personal */}
+              <div>
+                <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2">Personal Information</p>
+                <div className="bg-muted/40 rounded-xl divide-y divide-border text-sm">
+                  {[["Gender", selectedAdmission.gender], ["Date of Birth", selectedAdmission.date_of_birth], ["Nationality", selectedAdmission.nationality], ["Previous School", selectedAdmission.previous_school]].map(([l, v]) => (
+                    <div key={l} className="flex justify-between px-4 py-2.5"><span className="text-muted-foreground">{l}</span><span className="font-medium text-foreground">{v}</span></div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Guardian */}
+              <div>
+                <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2">Parent / Guardian</p>
+                <div className="bg-muted/40 rounded-xl divide-y divide-border text-sm">
+                  {[["Name", selectedAdmission.parent_name], ["Relationship", selectedAdmission.parent_relationship], ["Phone", selectedAdmission.parent_phone], ["Email", selectedAdmission.parent_email]].map(([l, v]) => (
+                    <div key={l} className="flex justify-between px-4 py-2.5"><span className="text-muted-foreground">{l}</span><span className="font-medium text-foreground">{v}</span></div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Documents */}
+              <div>
+                <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2">Supporting Documents</p>
+                <div className="space-y-2">
+                  {([["KJSEA Result Slip", selectedAdmission.kjsea_result_url], ["Birth Certificate", selectedAdmission.birth_cert_url], ["Passport Photo", selectedAdmission.passport_photo_url], ["School Leaving Certificate", selectedAdmission.school_leaving_cert_url], ["Medical Report", selectedAdmission.medical_report_url]] as [string, string][]).map(([label, url]) => (
+                    <div key={label} className="flex items-center justify-between bg-muted/40 rounded-lg px-4 py-2.5 text-sm">
+                      <span className="text-muted-foreground">{label}</span>
+                      {url ? (
+                        <a href={url} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 text-primary font-medium hover:underline text-xs">
+                          <ExternalLink className="w-3.5 h-3.5" /> View
+                        </a>
+                      ) : (
+                        <span className="text-xs text-muted-foreground/60">Not uploaded</span>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Admin notes */}
+              <div>
+                <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2">Admin Notes</p>
+                <textarea
+                  value={admissionNotes}
+                  onChange={e => setAdmissionNotes(e.target.value)}
+                  rows={3}
+                  placeholder="Add notes about this application (optional)..."
+                  className="w-full px-4 py-3 rounded-xl border border-input bg-background text-sm focus:outline-none focus:ring-2 focus:ring-ring resize-none"
+                />
+              </div>
+
+              {/* Action buttons */}
+              {selectedAdmission.status !== "accepted" && selectedAdmission.status !== "rejected" && (
+                <div className="flex gap-3">
+                  <button onClick={() => handleAdmissionStatus(selectedAdmission.id, "accepted")} disabled={admissionActionLoading} className="flex-1 flex items-center justify-center gap-2 bg-green-600 hover:bg-green-700 text-white font-semibold py-2.5 rounded-xl text-sm transition-colors disabled:opacity-50">
+                    {admissionActionLoading ? <RefreshCw className="w-4 h-4 animate-spin" /> : <Check className="w-4 h-4" />}
+                    Accept
+                  </button>
+                  <button onClick={() => handleAdmissionStatus(selectedAdmission.id, "rejected")} disabled={admissionActionLoading} className="flex-1 flex items-center justify-center gap-2 bg-red-600 hover:bg-red-700 text-white font-semibold py-2.5 rounded-xl text-sm transition-colors disabled:opacity-50">
+                    {admissionActionLoading ? <RefreshCw className="w-4 h-4 animate-spin" /> : <X className="w-4 h-4" />}
+                    Reject
+                  </button>
+                </div>
+              )}
+              {(selectedAdmission.status === "accepted" || selectedAdmission.status === "rejected") && (
+                <div className="flex gap-3">
+                  <button onClick={() => handleAdmissionStatus(selectedAdmission.id, selectedAdmission.status === "accepted" ? "rejected" : "accepted")} disabled={admissionActionLoading} className="flex-1 flex items-center justify-center gap-2 border border-border text-foreground font-semibold py-2.5 rounded-xl text-sm hover:bg-muted transition-colors disabled:opacity-50">
+                    <RefreshCw className="w-4 h-4" /> Reverse Decision
+                  </button>
+                  <button onClick={() => handleDeleteAdmission(selectedAdmission.id)} className="flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-sm text-red-600 hover:bg-red-50 border border-red-200 transition-colors">
+                    <Trash2 className="w-4 h-4" /> Delete
+                  </button>
+                </div>
+              )}
+            </div>
           </motion.div>
         </div>
       )}
