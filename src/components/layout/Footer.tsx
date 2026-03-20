@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { MapPin, Phone, Mail, Facebook, Twitter, Youtube, ShieldCheck } from "lucide-react";
+import schoolBadge from "@/assets/school-badge.jpeg";
 
 const Footer = () => {
   return (
@@ -9,9 +10,7 @@ const Footer = () => {
           {/* Brand */}
           <div>
             <div className="flex items-center gap-3 mb-4">
-              <div className="w-10 h-10 rounded-full bg-primary flex items-center justify-center">
-                <span className="font-display font-bold text-lg text-primary-foreground">K</span>
-              </div>
+              <img src={schoolBadge} alt="Kakamega School Badge" className="w-10 h-10 rounded-full object-cover" />
               <h3 className="font-display text-xl font-bold">Kakamega School</h3>
             </div>
             <p className="text-sm opacity-80 leading-relaxed">
